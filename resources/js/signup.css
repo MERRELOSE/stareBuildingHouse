@@ -1,0 +1,110 @@
+  
+  .texts h2{
+  color:  #0056b3;
+  margin: 5px 5px;
+  font-size: 50px;
+}
+
+.underline{
+  width: 151px;
+  height: 6px;
+  background-color: #3c009d;
+  border-radius: 9px;
+}
+
+.cta{
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  margin-top: 30px;
+  align-items: center;
+}
+
+.next{
+  background-color: white;
+  height: 500px;
+  max-width: 400px;
+  border-radius: 38px;
+  padding: 50px 0px;
+  margin: 50px 0px;
+  box-shadow: 10px 8px 5px 2px rgba(0, 0, 0, 0.1);
+}
+
+.inputs{
+  margin-top: 55px;
+  display: flex;
+  flex-direction: column;
+  gap:25px;
+}
+.input{
+  display: flex;
+  align-items: center;
+  width: 350px;
+  height: 50px;
+  background-color: #eaeaea;
+  border-radius: 38px;
+}
+
+.input svg{
+  margin: 0px 30px;
+  height: 30px;
+  width: 30px;
+}
+
+.input input{
+  height: 30px;
+  width: 300px;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  color: #000000;
+  font-size: 19px;
+  padding-right: 20px;
+
+}
+.connexion:hover{
+  color: #28a745;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.connexion{
+  color: #0056b3;
+  font-size: 18px;
+  text-decoration-line: underline;
+}
+.link:hover{
+  color: #319cf9;
+  cursor: pointer;
+
+}
+
+.submit_container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  margin-top: 40px;
+}
+
+.submit:hover{
+  background-color:#28a745;
+}
+
+.submit{
+  justify-content: center;
+  align-items: center;
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #0056b3;
+  color: white;
+  border-radius: 38px;
+  font-size: 18px;
+  cursor: pointer;
+  font-weight: bold;
+  border: 1px solid ;
+  text-decoration: none;
+  width: 160px;
+  height: 40px;
+}
+  
