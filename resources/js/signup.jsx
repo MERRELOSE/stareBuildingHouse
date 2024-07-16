@@ -4,65 +4,161 @@ import './signup.css';
 import Header from './header';
 import Footer from './footer';
 
-const Signup = ({ onLoginClick }) => {
-  const handleSignupClick = () => {
-    // Gestion de la connexion
-  };
+const Signup = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
   });
+  const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-  const navigue = useNavigate()
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    navigue = ('/login')
-    // Ajoutez ici votre logique de soumission du formulaire
+
+  const validateEmail = (email) => {
+    const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+  
+    const { name, email, password, confirmPassword } = formData;
+  
+    // Client-side validation
+    const formErrors = {};
+    if (!name.trim()) {
+      formErrors.name = 'Name is required.';
+    }
+    if (!email.trim()) {
+      formErrors.email = 'Email is required.';
+    } else if (!validateEmail(email)) {
+      formErrors.email = 'Invalid email format.';
+    }
+    if (!password.trim()) {
+      formErrors.password = 'Password is required.';
+    } else if (password.length < 8) {
+      formErrors.password = 'Password must be at least 8 characters long.';
+    }
+    if (!confirmPassword.trim()) {
+      formErrors.confirmPassword = 'Confirm password is required.';
+    } else if (password !== confirmPassword) {
+      formErrors.confirmPassword = 'Passwords do not match.';
+    }
+  
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
+      return;
+    }
+  
+    // Send signup data to the server
+    setIsLoading(true);
+
+
+    // Afficher les données pour vérifier
+  console.log({
+    name,
+    email,
+    password,
+    confirmPassword
+  })
+
+    try {
+      const response = await fetch('/api/signup', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({
+            name,
+            email,
+            password,
+            password_confirmation: confirmPassword // Assurez-vous que ce nom est correct
+        }),
+    });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        // Signup successful
+        console.log('Signup successful!');
+        navigate('/login');
+      } else {
+        // Signup error from server
+        if (data.errors) {
+          // Handle specific errors
+          if (data.errors.email) {
+            setErrors({ email: 'Email already taken.' });
+          }
+          if (data.errors.password_confirmation) {
+            setErrors({ confirmPassword: 'Passwords do not match.' });
+          }
+        } else {
+          // Generic error
+          setErrors({ message: 'Signup failed. Please try again.' });
+        }
+      }
+    } catch (error) {
+      console.error('Signup error:', error);
+      // Handle specific errors from server response
+      if (error instanceof SyntaxError) {
+          setErrors({ message: 'Unexpected response from server. Please try again later.' });
+      } else {
+          setErrors({ message: 'Signup failed. Please try again.' });
+      }
+  } finally {
+      setIsLoading(false);
+  }
+  };
   return (
     <div>
-      <Header onSignupClick={handleSignupClick} onLoginClick={onLoginClick} />
+      <Header />
       <center>
-      <main>
-        <form  className='next' onSubmit={handleSubmit} onChange={handleChange}>
+        <main>
+          <form className="next" method="POST" onSubmit={handleSubmit}>
             <div className="header">
-              <div className="texts"><h2>Inscription</h2></div>
+              <div className="texts">
+                <h2>Signup</h2>
+              </div>
               <div className="underline"></div>
             </div>
-            <div className='cta'>
-            <div className="input">
-              <svg xmlns="http://www.w3.org/2000/svg" width={50} height={50} viewBox="0 0 24 24"><path fill="black" d="M12 4a4 4 0 0 1 4 4a4 4 0 0 1-4 4a4 4 0 0 1-4-4a4 4 0 0 1 4-4m0 10c4.42 0 8 1.79 8 4v2H4v-2c0-2.21 3.58-4 8-4"></path></svg>
-              <input type="text" name="name" className="text" placeholder="Username" required />
-            </div>
+            <div className="cta">
+              <div className="input">
+                <svg xmlns="http://www.w3.org/2000/svg" width={50} height={50} viewBox="0 0 24 24"><path fill="black" d="M12 4a4 4 0 0 1 4 4a4 4 0 0 1-4 4a4 4 0 0 1-4-4a4 4 0 0 1 4-4m0 10c4.42 0 8 1.79 8 4v2H4v-2c0-2.21 3.58-4 8-4"></path></svg>
+                <input type="text" name="name" className="text" placeholder="Username"  value={formData.name} onChange={handleChange} />
+                {errors.name && <p className="error">{errors.name}</p>}
+              </div>
               <div className="input">
                 <svg xmlns="http://www.w3.org/2000/svg" width={50} height={50} viewBox="0 0 24 24"><path fill="black" d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2m0 4l-8 5l-8-5V6l8 5l8-5z"></path></svg>
-                <input type="email" name="email" className="text" placeholder="Email" required />
+                <input type="email" name="email" className="text" placeholder="Email" autoComplete="email" value={formData.email} onChange={handleChange} />
+                {errors.email && <p className="error">{errors.email}</p>}
+              </div>
+              <div className="input">
+                <svg xmlns="http://www.w3.org/2000/svg" width={50} height={50} viewBox="0 0 24 24"> <path fill="black" d="M12 17a2 2 0 0 0 2-2a2 2 0 0 0-2-2a2 2 0 0 0-2 2a2 2 0 0 0 2 2m6-9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2h1V6a5 5 0 0 1 5-5a5 5 0 0 1 5 5v2zm-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3"></path></svg>
+                <input type="password" name="password" className="text" placeholder="Password" autoComplete="new-password" value={formData.password} onChange={handleChange} />
+                {errors.password && <p className="error">{errors.password}</p>}
               </div>
               <div className="input">
                 <svg xmlns="http://www.w3.org/2000/svg" width={50} height={50} viewBox="0 0 24 24"><path fill="black" d="M12 17a2 2 0 0 0 2-2a2 2 0 0 0-2-2a2 2 0 0 0-2 2a2 2 0 0 0 2 2m6-9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2h1V6a5 5 0 0 1 5-5a5 5 0 0 1 5 5v2zm-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3"></path></svg>
-                <input type="password" name="password" className="text" placeholder="Password" required />
+                <input type="password" name="confirmPassword" className="text" placeholder="Confirm Password" autoComplete="new-password" value={formData.confirmPassword} onChange={handleChange} />
+                {errors.confirmPassword && <p className="error">{errors.confirmPassword}</p>}
               </div>
-              <div className="input">
-                <svg xmlns="http://www.w3.org/2000/svg" width={50} height={50} viewBox="0 0 24 24"><path fill="black" d="M12 17a2 2 0 0 0 2-2a2 2 0 0 0-2-2a2 2 0 0 0-2 2a2 2 0 0 0 2 2m6-9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2h1V6a5 5 0 0 1 5-5a5 5 0 0 1 5 5v2zm-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3"></path></svg>
-                <input type="password" name="confirmPassword" className="text" placeholder="Confirm Password"  required />
-              </div>
+              {errors.apiError && <p className="error">{errors.apiError}</p>}
             </div>
-           
-            <p>Vous avez déjà un compte ? <Link onClick={onLoginClick} to='/login' className='connexion'>Se connecter</Link></p>
-            <div className="submit_container">
-              <button type="submit" className="submit" >S'inscrire</button>
+              <p>Already have an account? <Link to="/login" className="connexion">Sign In</Link></p>
+              <div className="submit_container">
+              <button className="submitss" type="submit"  disabled={isLoading}>{isLoading ? 'Loading...' : 'S\'inscrire'} </button>
             </div>
-        </form>
-      </main>
+          </form>
+        </main>
       </center>
-      <Footer/>
+      <Footer />
     </div>
   );
 };

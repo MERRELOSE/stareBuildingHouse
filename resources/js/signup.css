@@ -87,11 +87,11 @@
   margin-top: 40px;
 }
 
-.submit:hover{
+.submitss:hover{
   background-color:#28a745;
 }
 
-.submit{
+.submitss{
   justify-content: center;
   align-items: center;
   display: inline-block;
