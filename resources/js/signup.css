@@ -28,13 +28,20 @@
   padding: 50px 0px;
   margin: 50px 0px;
   box-shadow: 10px 8px 5px 2px rgba(0, 0, 0, 0.1);
+  transition: height 0.3s ease; 
+}
+
+.next-error {
+  --error-height: calc(20px * var(--error-count, 0));
+  height: calc(100% + var(--error-height));/* Optionnel : ajoute une transition pour une animation fluide */
+  /* Autres styles comme couleur de fond ou bordure */
 }
 
 .inputs{
   margin-top: 55px;
   display: flex;
   flex-direction: column;
-  gap:25px;
+  gap:15px;
 }
 .input{
   display: flex;
@@ -108,3 +115,10 @@
   height: 40px;
 }
   
+
+/*Message d'erreur lors de l'enrégistrement d'un user"*/
+.error {
+  color: red;
+  font-size: 0.875rem; /* Taille de police adaptée */
+  margin-top: 5px; /* Marge pour séparer du champ de saisie */
+}

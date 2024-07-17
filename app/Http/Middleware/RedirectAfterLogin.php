@@ -18,9 +18,9 @@ class RedirectAfterLogin
     public function handle(Request $request, Closure $next)
     {
         if (Auth::check()) {
-            return redirect()->route('home'); // Redirection vers la page d'accueil après la connexion
+            // Utilisateur connecté, rediriger vers la page d'accueil
+            return redirect('/');
         }
-
         return $next($request);
     }
 }

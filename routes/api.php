@@ -9,3 +9,6 @@ Route::post('/signup', [AuthController::class, 'register']);
 
 // Route pour la connexion
 Route::post('/login', [AuthController::class, 'login']);
+
+//Route pour la page d'accueil
+Route::post('/', [AuthController::class, 'index']);

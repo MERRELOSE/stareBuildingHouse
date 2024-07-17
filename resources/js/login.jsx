@@ -5,48 +5,66 @@ import Footer from './footer';
 import './login.css';
 
 const Login = () => {
-
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false); // Ajout de l'état isLoading
+
+  // Récupérer le token CSRF
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
+    setIsLoading(true); // Définir isLoading à true au début de la soumission du formulaire
+
     // Validate input fields
     if (!email.trim() || !password.trim()) {
-      setError('Please fill in all required fields.');
+      setError('Veuillez remplir tous les champs obligatoires.');
+      setIsLoading(false); // Remettre isLoading à false en cas d'erreur
       return;
     }
-  
+
+// Afficher les données pour vérifier
+  console.log({
+  email,
+  password,
+  })
+
     try {
       const response = await fetch('/api/login', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': csrfToken // Utilisation du token CSRF récupéré
         },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({
+          email,
+          password
+        }),
       });
-  
-      if (!response.ok) {
-        throw new Error('Failed to log in.');
-      }
-  
+    
       const data = await response.json();
-  
-      if (data.success) {
-        console.log('Login successful!');
-        navigate('/devis');
+    
+      if (response.ok) {
+        console.log('Connexion réussie !');
+        navigate('/');
       } else {
-        setError(data.message || 'Invalid login credentials.');
+        // Handle authentication errors
+        if (response.status === 401) {
+          setError('Identifiants de connexion invalides.');
+        } else {
+          setError(data.message || 'Erreur lors de la connexion.');
+        }
       }
     } catch (error) {
-      console.error('Error:', error);
-      setError('An unexpected error occurred.');
+      console.error('Erreur de connexion:', error);
+      setError('Une erreur inattendue s\'est produite.');
+    } finally {
+      setIsLoading(false); // Remettre isLoading à false après la soumission du formulaire
     }
   };
-
 
   return (
     <div>
@@ -74,7 +92,7 @@ const Login = () => {
             <div className="forgot-password">Mot de passe oublié? <Link className='lin'>Clique ici !</Link></div>
             <p>Vous n'avez pas de compte ? <Link to="/signup" className='inscription'>S'inscrire</Link></p>
             <div className="submit_container">
-              <button className='submits' type="submit">Se connecter</button>
+              <button className='submits' type="submit" disabled={isLoading}>{isLoading ? 'Loading...' : 'Se connecter'} </button>
             </div>
           </form>
         </main>

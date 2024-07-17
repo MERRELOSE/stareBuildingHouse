@@ -13,13 +13,9 @@ Route::get('/{any}', function () {
     return view('welcome'); // Le fichier Blade principal qui contient votre application React
 })->where('any', '.*');
 
-/*Route::post('/register', [AuthController::class, 'register']);
-
-Route::post('/login', [AuthController::class, 'login']);*/
-
-
 // Route pour le traitement du formulaire d'inscription via une API dédiée
 Route::post('/api/signup', [AuthController::class, 'register'])->name('api.signup');
 
 // Route pour le traitement du formulaire de connexion via une API dédiée
 Route::post('/api/login', [AuthController::class, 'login'])->name('api.login');
+
