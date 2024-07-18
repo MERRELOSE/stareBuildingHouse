@@ -1,10 +1,6 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
+import { Link, useNavigate} from 'react-router-dom';
 import './home.css';
-import Login from './login';
-import Signup from './signup';
-import Header from './header'
-import Footer from './footer'
 import maison from './components/Constructiondemaison1.jpg';
 import plan from './components/Constructiondemaisonplan.jpg';
 import plan1 from './components/plan1.jpg';
@@ -14,43 +10,30 @@ import plan4 from './components/plan4.jpg';
 import plan5 from './components/plan5.jpg';
 import plan6 from './components/plan6.jpg';
 import detail from './components/construction.mp4';
+import { useAuth } from './AuthContext';
 
-
-
-
-const Home = () => {
-    const [isLoginOpen, setIsLoginOpen] = useState(false);
-    const [isSignupOpen, setIsSignupOpen] = useState(false);
-  
-    const handleLoginClick = () => {
-      setIsLoginOpen(true);
-      setIsSignupOpen(false); //la modal d'inscription doit être fermée quand la modal de connexion s'ouvre
-    };
-  
-    const handleSignupClick = () => {
-      setIsSignupOpen(true);
-      setIsLoginOpen(false); //la modal de connexion doit être fermée quand la modal d'inscription s'ouvre
-    };
-  
-    const handleLoginSwitch = () => {
-      setIsSignupOpen(false);
-      setIsLoginOpen(true);
-    };
-  
-    const handleSignupSwitch = () => {
-      setIsLoginOpen(false);
-      setIsSignupOpen(true);
-    };
+    
+    const Home = ({user}) => {
+        const navigate = useNavigate();
+        const { isAuthenticated, login } = useAuth();
+    
+        const handleGetStartedClick = () => {
+            if (!isAuthenticated) {
+                navigate('/login', { state: { message: 'Veuillez vous connecter avant de continuer.' } });
+            } else {
+                // Logique pour les utilisateurs connectés
+                navigate('/devis')
+            }
+        }
+    
     return (
             <div className='Home'>
-                      <Header onSignupClick={handleSignupClick} onLoginClick={handleLoginClick} />
-
                 <main>
                     <section className="hero-section">
                         <div className="hero-content">
-                            <h2>Obtenez des devis précis pour votre projet de maison</h2>
+                            <h2>{user && <p>Bonjour, {user.name}!</p>}Obtenez des devis précis pour votre projet de maison</h2>
                             <p>Utilisez notre application pour créer des devis personnalisés et détaillés en quelques étapes simples.</p>
-                            <Link to="/login" className="cta-button">Commencer Maintenant</Link>
+                            <Link to="" onClick={handleGetStartedClick} className="cta-button">Commencer Maintenant</Link>
                         </div><br/>
                         <div className="hero">
                             <div className="hero-image">
@@ -63,11 +46,11 @@ const Home = () => {
                         </div>
                         
                         <div className="hero1">
-                            <div className="paragraphe">
+                            <div className="paragraphe2">
                                 <h3>Un titre moyen</h3>
                                 <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quibusdam eius, perspiciatis possimus ad laudantium numquam ipsam odit minus! Illum alias nesciunt veniam veritatis consequatur aperiam quos at voluptatem assumenda minus? Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum dolor maxime aspernatur sed rem blanditiis, tenetur obcaecati consectetur sequi eveniet vitae excepturi id inventore. Voluptatem repudiandae vel ducimus quam minus. </p>
                             </div>
-                            <div className="hero-image1">
+                            <div className="hero-image2">
                                 <img src={plan} alt="Plan de construction de maison" />
                             </div>
                         </div>
@@ -180,10 +163,6 @@ const Home = () => {
                         </form>
                     </section>
                 </main>
-                <Footer/>
-                {/* Composant Modal */}
-                {isLoginOpen && <Login onSignupClick={handleSignupSwitch} />}
-                {isSignupOpen && <Signup onLoginClick={handleLoginSwitch} />}
             </div>
             
     );

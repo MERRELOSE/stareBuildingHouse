@@ -1,8 +1,6 @@
 // devis1.jsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from './header'
-import Footer from './footer'
 import './devis1.css'
 
 
@@ -19,7 +17,6 @@ const Devis1 = () => {
     };
     return (
         <div>
-            <Header />
             <center>
                 <main>
                     <h4>Etape:2 sur 6:</h4>
@@ -50,7 +47,6 @@ const Devis1 = () => {
                     </form>
                 </main>
             </center>
-            <Footer/>
         </div> 
     );
 };

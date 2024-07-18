@@ -10,6 +10,8 @@
 .der-container{
     display: flex;
     gap: 600px;
+    text-align: center;
+    align-items: center;
 }
 .menu{
     width: 700px;

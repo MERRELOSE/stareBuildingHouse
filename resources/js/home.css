@@ -10,7 +10,7 @@ body {
 .hero-section {
     align-items: center;
     justify-content: space-between;
-    padding: 50px;
+    padding: 25px;
     background-color: #f4f4f4;
 }
 
@@ -62,6 +62,16 @@ body {
 }
 .paragraphe p{
     height: 200px;
+    width: 550 ;
+}
+.hero-image2 img {
+    width: 550px;
+    height: 300px;
+    border-radius: 38px;
+}
+.paragraphe2 p{
+    height: 200px;
+    width: 500px ;
 }
 
 .features-section, .testimonials-section, .how-it-works-section, .contact-section {

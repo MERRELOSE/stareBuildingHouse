@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './signup.css';
-import Header from './header';
-import Footer from './footer';
+
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -118,7 +117,6 @@ const Signup = () => {
   };
   return (
     <div>
-      <Header />
       <center>
         <main>
           <form className={`next ${errors.length > 0 ? 'next-error' : ''}`}   method="POST" onSubmit={handleSubmit} >
@@ -166,7 +164,6 @@ const Signup = () => {
           </form>
         </main>
       </center>
-      <Footer />
     </div>
   );
 };

@@ -19,3 +19,5 @@ Route::post('/api/signup', [AuthController::class, 'register'])->name('api.signu
 // Route pour le traitement du formulaire de connexion via une API dédiée
 Route::post('/api/login', [AuthController::class, 'login'])->name('api.login');
 
+
+Route::get('/profile', [PageController::class, 'profile'])->name('profile')->middleware('auth');

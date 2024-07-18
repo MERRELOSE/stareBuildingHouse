@@ -1,21 +1,35 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import Header from './header';
-import Footer from './footer';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import './login.css';
 
-const Login = () => {
+
+const Login = ({setUser}) => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false); // Ajout de l'état isLoading
+  const location = useLocation();
+  const [message, setMessage] = useState('');
+
+
 
   // Récupérer le token CSRF
   const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
+
+  useEffect(() => {
+    if (location.state && location.state.message) {
+        setMessage(location.state.message);
+    }
+  }, [location]);
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Logique de soumission du formulaire
+    
 
     setIsLoading(true); // Définir isLoading à true au début de la soumission du formulaire
 
@@ -26,7 +40,7 @@ const Login = () => {
       return;
     }
 
-// Afficher les données pour vérifier
+  // Afficher les données pour vérifier
   console.log({
   email,
   password,
@@ -49,6 +63,9 @@ const Login = () => {
     
       if (response.ok) {
         console.log('Connexion réussie !');
+        localStorage.setItem('accessToken', data.access_token);
+        // Optionnel : Gérer le profil utilisateur côté client si nécessaire
+        setUser(data.user); // Stocker les détails de l'utilisateur dans l'état si nécessaire
         navigate('/');
       } else {
         // Handle authentication errors
@@ -68,9 +85,10 @@ const Login = () => {
 
   return (
     <div>
-      <Header />
       <center>
         <main className="centre">
+          {message && <div className="alert alert-info">{message}</div>}
+          {message && <p>{message}</p>}
           <form className="ctanext" onSubmit={handleSubmit}>
             <div className="header">
               <div className="texts"><h2>Connexion</h2></div>
@@ -97,7 +115,6 @@ const Login = () => {
           </form>
         </main>
       </center>
-      <Footer />
     </div>
   );
 };
