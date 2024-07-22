@@ -10,22 +10,20 @@ import plan4 from './components/plan4.jpg';
 import plan5 from './components/plan5.jpg';
 import plan6 from './components/plan6.jpg';
 import detail from './components/construction.mp4';
-import { useAuth } from './AuthContext';
+
 
     
-    const Home = ({user}) => {
+    const Home = ({ user }) => {
         const navigate = useNavigate();
-        const { isAuthenticated, login } = useAuth();
-    
-        const handleGetStartedClick = () => {
-            if (!isAuthenticated) {
-                navigate('/login', { state: { message: 'Veuillez vous connecter avant de continuer.' } });
+
+        const handleGetStartedClick = (e) => {
+            e.preventDefault();
+            if ( user ) {
+                navigate('/devis');
             } else {
-                // Logique pour les utilisateurs connectés
-                navigate('/devis')
+                navigate('/login', { state: { message: 'Merci de bien vouloir vous connecter avant de continuer:)' } });
             }
-        }
-    
+        };
     return (
             <div className='Home'>
                 <main>
@@ -33,7 +31,7 @@ import { useAuth } from './AuthContext';
                         <div className="hero-content">
                             <h2>{user && <p>Bonjour, {user.name}!</p>}Obtenez des devis précis pour votre projet de maison</h2>
                             <p>Utilisez notre application pour créer des devis personnalisés et détaillés en quelques étapes simples.</p>
-                            <Link to="" onClick={handleGetStartedClick} className="cta-button">Commencer Maintenant</Link>
+                            <Link to=""  onClick={handleGetStartedClick} className="cta-button">Commencer Maintenant</Link>
                         </div><br/>
                         <div className="hero">
                             <div className="hero-image">

@@ -60,7 +60,7 @@ body{
 
 .forgot-password { 
     color: black;
-    font-size: 18px;
+    font-size: 16px;
     margin-top: 27px;
     text-align: center;
 }
@@ -112,3 +112,9 @@ body{
     font-size: 0.875rem; /* Taille de police adaptée */
     margin-top: 5px; /* Marge pour séparer du champ de saisie */
   }
+
+.alert-warning{
+    color: red;
+    font-size: 18px; /* Taille de police adaptée */
+    margin: 50px; /* Marge pour séparer du formulaire */
+}

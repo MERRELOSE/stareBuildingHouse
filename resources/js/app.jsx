@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { AuthProvider } from './AuthContext';
 import Home from './home';
 import Login from './login';
 import Devis from './devis';
@@ -12,23 +13,19 @@ import Header from './header';
 import Signup from './signup';
 import Footer from './footer';
 import ProfilePage from './ProfilePage';
-import { AuthProvider } from './AuthContext';
 
-console.log("Le composant App s'est bien chargé");
+
 const App = () => {
     const [user, setUser] = useState(null);
 
-
-    console.log("Le composant App est en cours de rendu");
     return (
-
     <AuthProvider>
         <Router>
             <Header user={user} />
             <div>
                 <Routes>
                     <Route path="/" element={<Home  user={user} />} />
-                    <Route path="/header" element={<Header />} />
+                    <Route path="/header" element={<Header user={user} />} />
                     <Route path="/login" element={<Login  setUser={setUser} />} />
                     <Route path="/ProfilePage" element={<ProfilePage />} />
                     <Route path="/devis" element={<Devis />} />
