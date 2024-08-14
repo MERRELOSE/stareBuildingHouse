@@ -1,0 +1,49 @@
+.devis-final-container {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+h2 {
+  margin-bottom: 20px;
+}
+
+.summary-section, .cost-summary {
+  padding: 15px;
+  border: 1px solid #ccc;
+  margin-bottom: 15px;
+  border-radius: 5px;
+}
+
+.summary-section h3, .cost-summary h3 {
+  margin-top: 0;
+}
+
+.cost-summary {
+  font-weight: bold;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.action-buttons button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.edit-button {
+  background-color: #f0ad4e;
+  color: #fff;
+}
+
+.confirm-button {
+  background-color: #5cb85c;
+  color: #fff;
+}

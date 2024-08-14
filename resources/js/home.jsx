@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate} from 'react-router-dom';
-import './home.css';
+import './Home.css';
 import maison from './components/Constructiondemaison1.jpg';
 import plan from './components/Constructiondemaisonplan.jpg';
 import plan1 from './components/plan1.jpg';

@@ -1,8 +1,10 @@
 .header-container {
     background-color: #333;
     padding: 10px;
+    text-align: center;
+    margin-bottom: 40px; /* Espace entre le footer et le reste du contenu */
 }
- 
+
 .der-container img{
     height: 70px;
     width: 70px;

@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
-import './header.css';
+import './Header.css';
 import logo from './components/Logo.png';
 import { useAuth } from './AuthContext';
 

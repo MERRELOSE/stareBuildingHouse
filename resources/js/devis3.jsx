@@ -1,50 +1,61 @@
-// devis1.jsx
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import './devis3.css'
+import React, { useState, useEffect } from 'react';
+import './Devis3.css';
 
+const Devis3 = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
+    // Initialisation de l'état pour stocker le volume de la chape
+    const [volumeChappe, setVolumeChappe] = useState(quoteData.volumeChappe || '');
 
+    useEffect(() => {
+        if (volumeChappe !== '') {
+            const volumeChappeNum = parseFloat(volumeChappe);
+            const quantiteCiment = (volumeChappeNum * 350) / 50; // Calcul de la quantité de ciment
+            const quantiteSable = volumeChappeNum * 0.4 * 1.5;   // Calcul de la quantité de sable
+            const quantiteGravier = volumeChappeNum * 0.8 * 1.6; // Calcul de la quantité de gravier
 
-const Devis1 = () => {
-    const navigate =useNavigate();
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        navigate ('/devis4');
+            updateQuoteData({
+                volumeChappe: volumeChappeNum,
+                quantiteCiment,
+                quantiteSable,
+                quantiteGravier,
+            });
+        }
+    }, [volumeChappe, updateQuoteData]);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        switch (name) {
+            case 'volumeChappe':
+                setVolumeChappe(value); // Mise à jour du volume de la chape dans l'état
+                break;
+            default:
+                break;
+        }
     };
+
     return (
-        <div>
-            <center>
-                <main>
-                    <h4>Etape:4 sur 6:</h4>
-                    <form className='formdevis1' action="" onSubmit={handleSubmit}>
-                        <h4>Quel type de construction souhaitez-vous?(facultatif)</h4><br />
-                        <div className='daddykey'>
-                            <div className='key'>
-                                {/*icône svg*/}
-                                <input type="radio" name="" id="" />
-                                <label htmlFor="">Parping</label>
-                            </div>
-                            <div className='key'>
-                                 {/*icône svg*/}
-                                 <input type="radio" name="" id="" />
-                                 <label htmlFor="">En brique</label>
-                            </div>
-                            <div className='key'>
-                                 {/*icône svg*/}
-                                 <input type="radio" name="" id="" />
-                                 <label htmlFor="">Autres</label>
-                            </div>
-                        </div><br />
-                        <textarea name="" id="" minLength={2} maxLength={4} placeholder='Quelle est la surface habitable de votre construction en m² ...?' className='textarea' />
-                        <div className='daddybtncta'>
-                            <button type="submit" name='précédent' to="/devis" className='btncta1' >Précédent</button>
-                            <button type="submit" name='suivant' className='btncta2' >Suivant</button>
-                        </div>
-                    </form>
-                </main>
-            </center>
-        </div> 
+        <div className='devis3'>
+            <h2>Étape 3: Chape d'Égalisation</h2>
+            <label>
+                Volume de la chape d'égalisation (m³):
+                <input
+                    type="number"
+                    name="volumeChappe"
+                    value={volumeChappe}
+                    onChange={handleChange}
+                    step="0.01"
+                    min="0"
+                />
+            </label>
+            <br />
+            <h3>Matériaux nécessaires</h3>
+            <p>Quantité de ciment : {quoteData.quantiteCiment?.toFixed(2)} sacs</p>
+            <p>Quantité de sable : {quoteData.quantiteSable?.toFixed(2)} tonnes</p>
+            <p>Quantité de gravier : {quoteData.quantiteGravier?.toFixed(2)} tonnes</p>
+            <br />
+            <button onClick={prevStep}>Précédent</button>
+            <button onClick={nextStep}>Suivant</button>
+        </div>
     );
 };
 
-export default Devis1;
+export default Devis3;

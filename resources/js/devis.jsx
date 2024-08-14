@@ -1,60 +1,210 @@
-// devis.jsx
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import './devis.css'
-
+import React, { useState } from 'react';
+import Devis1 from './Devis1.jsx';
+import Devis2 from './Devis2';
+import Devis5 from './Devis5';
+import Devis6 from './Devis6';
+import Elevation from './Elevation'; // Import du nouveau composant Élévation
+import ToitureSelector from './ToitureSelector';
+import Devis7 from './Devis7';
+import Devis8 from './Devis8';
+import TileSelection from './TileSelection';  // Composant pour la sélection de revêtement de sol
+import DevisFinal from './DevisFinal'; // ImportATION le composant final
 
 const Devis = () => {
-    const navigate = useNavigate();
+    const [step, setStep] = useState(1); // Étape actuelle du processus de devis
+    const [quoteData, setQuoteData] = useState({
+        perimetre: '',
+        hauteurFondation: '',
+        largeurFondation: '',
+        longueurDeblai: '',
+        quantiteRemblai: '',
+        largeurBeton: '',
+        epaisseurFondation: '',
+        epaisseurChappe: '',
+        aireHabitable: '',
+        ciment: '',
+        sable: '',
+        gravier: '',
+        blocs: '',
+        charpente: '',
+        toiture: '',
+        typeToiture: '',
+        materialToiture: '',
+        plomberie: '',
+        electricite: '',
+        revetements: '',
+        peinture: '',
+        menuiserie: '',
+        finitions: '',
+        // Ajouts pour les revêtements de sol
+        tileType: '',
+        surfaceUtile: 0,
+        numberOfTiles: 0,
+    });
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        navigate ('/devis1');
+    // Calcul du coût total basé sur les données du devis
+    const calculateTotalCost = () => {
+        // Exemple de calcul : ajoutez des calculs détaillés ici
+        const costMaterial = 100 * quoteData.surfaceUtile; // coût estimatif par m²
+        const costLabour = 2000; // coût estimatif de la main-d'œuvre
+        return costMaterial + costLabour;
     };
-    const handleClick = (e) => {
-        e.preventDefault();
-        alert("Vous serai rediriger vers la page accueil");
-        navigate ('/home');
+
+    // Fonction pour passer à l'étape suivante
+    const nextStep = () => {
+        setStep((prevStep) => prevStep + 1);
     };
-    return (
-        <div>
-            <center>
-                <main>
-                    <h1>Page Devis</h1>
-                    <h4>Etape1 sur 6:</h4>
-                    <form className='formdevis1' onSubmit={handleSubmit}>
-                        <h4>Quelle est la nature de votre projet ?</h4><br />
-                        <div className='daddykey'>
-                            <div className='key'>
-                                {/*icône svg*/}
-                                <input type="radio" name="" id="" />
-                                <label htmlFor="">Livré clé en main</label>
-                            </div>
-                            <div className='key'>
-                                 {/*icône svg*/}
-                                 <input type="radio" name="" id="" />
-                                 <label htmlFor="">Livré hors eau hors air</label>
-                            </div>
-                            <div className='key'>
-                                 {/*icône svg*/}
-                                 <input type="radio" name="" id="" />
-                                 <label htmlFor="">Gros oeuvre uniquement</label>
-                            </div>
-                            <div className='key'>
-                                 {/*icône svg*/}
-  
-                                 <label htmlFor="">Autres</label>
-                            </div>
-                        </div><br />
-                        <textarea name="" id="" minLength={10} maxLength={100} placeholder='Précisez la nature de votre projet ...' className='textarea' />
-                        <div className='daddybtncta' >
-                            <button type="submit" name='annuler' className='btncta1'onClick={handleClick}>Annuler</button>
-                            <button type="submit" name='suivant' to ='./devis1' className='btncta2' >Suivant</button>
+
+    // Fonction pour revenir à l'étape précédente
+    const prevStep = () => {
+        setStep((prevStep) => prevStep - 1);
+    };
+
+    // Fonction pour mettre à jour les données du devis
+    const updateQuoteData = (newData) => {
+        setQuoteData((prevData) => ({
+            ...prevData,
+            ...newData,
+        }));
+    };
+
+    // Fonction pour confirmer le devis final
+    const confirmDevis = () => {
+        // Logique pour sauvegarder le devis ou informer l'utilisateur
+        console.log("Devis confirmé avec succès!", quoteData);
+        alert("Votre devis a été confirmé avec succès !");
+    };
+
+    // Fonction pour rendre le composant approprié en fonction de l'étape actuelle
+    const renderStep = () => {
+        switch (step) {
+            case 1:
+                return (
+                    <Devis1
+                        nextStep={nextStep}
+                        quoteData={quoteData}
+                        updateQuoteData={updateQuoteData}
+                    />
+                );
+            case 2:
+                return (
+                    <Devis2
+                        nextStep={nextStep}
+                        prevStep={prevStep}
+                        quoteData={quoteData}
+                        updateQuoteData={updateQuoteData}
+                    />
+                );
+            case 3:
+                return (
+                    <Devis5
+                        nextStep={nextStep}
+                        prevStep={prevStep}
+                        quoteData={quoteData}
+                        updateQuoteData={updateQuoteData}
+                    />
+                );
+            case 4:
+                return (
+                    <Devis6
+                        nextStep={nextStep}
+                        prevStep={prevStep}
+                        quoteData={quoteData}
+                        updateQuoteData={updateQuoteData}
+                    />
+                );
+            case 5:
+                return (
+                    <Elevation // Ajout de l'étape Élévation ici
+                        nextStep={nextStep}
+                        prevStep={prevStep}
+                        quoteData={quoteData}
+                        updateQuoteData={updateQuoteData}
+                    />
+                );
+
+            case 6:
+                return (
+                    <ToitureSelector
+                        nextStep={nextStep}
+                        prevStep={prevStep}
+                        updateQuoteData={updateQuoteData}
+                    />
+                );
+            case 7:
+                if (quoteData.typeToiture) {
+                    return (
+                        <ToitureSelector
+                            typeToiture={quoteData.typeToiture}
+                            nextStep={nextStep}
+                            prevStep={prevStep}
+                            updateQuoteData={updateQuoteData}
+                        />
+                    );
+                } else {
+                    return (
+                        <div>
+                            <p>Sélectionnez d'abord un type de toiture.</p>
+                            <button onClick={prevStep}>Retour</button>
                         </div>
-                    </form>
-                </main>
-            </center>
-        </div> 
+                    );
+                }
+            case 8:
+                if (quoteData.materialToiture === 'toleGalvanisee') {
+                    return (
+                        <Devis7
+                            nextStep={nextStep}
+                            prevStep={prevStep}
+                            quoteData={quoteData}
+                            updateQuoteData={updateQuoteData}
+                        />
+                    );
+                }
+                else {
+                    return (
+                        <div>
+                            <p>Sélectionnez d'abord un matériau de toiture.</p>
+                            <button onClick={prevStep}>Retour</button>
+                        </div>
+                    );
+                }
+            case 9:
+                    return (
+                        <Devis8
+                            nextStep={nextStep}
+                            prevStep={prevStep}
+                            quoteData={quoteData}
+                            updateQuoteData={updateQuoteData}
+                        />
+                    );
+            case 10:
+                return (
+                    <TileSelection
+                        nextStep={nextStep}
+                        prevStep={prevStep}
+                        quoteData={quoteData}
+                        updateQuoteData={updateQuoteData}
+                    />
+                );
+            case 11:
+                return (
+                    <DevisFinal
+                        quoteData={quoteData}
+                        totalCost={calculateTotalCost()}
+                        onConfirm={confirmDevis}
+                        onEdit={prevStep}
+                    />
+                );
+            default:
+                return <h3>Erreur: étape inconnue.</h3>;
+        }
+    };
+
+    return (
+        <div className="devis-container">
+            <h1>Processus de Devis</h1>
+            {renderStep()}
+        </div>
     );
 };
 
