@@ -1,8 +1,20 @@
 .header-container {
     background-color: #333;
     padding: 10px;
-    text-align: center;
     margin-bottom: 40px; /* Espace entre le footer et le reste du contenu */
+}
+
+.logo {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    align-items: center;
+    justify-content: center;
+}
+.logo p{
+    color: white;
+    font-family: cursive;
+    font-size: 30px;
 }
 
 .der-container img{
@@ -11,7 +23,7 @@
 }
 .der-container{
     display: flex;
-    gap: 600px;
+    gap: 500px;
     text-align: center;
     align-items: center;
 }

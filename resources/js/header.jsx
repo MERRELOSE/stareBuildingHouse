@@ -15,9 +15,10 @@ const Header = ({ user }) => {
         if ( user ) {
             navigate('/devis');
         } else {
-            navigate('/login', { state: { message: 'Merci de bien vouloir vous connecter avant de continuer:' } });
+            navigate('/login', { state: { message: 'Merci de bien vouloir vous connecter avant de continuer.' } });
         }
     };   
+
 
     const handleLogout = () => {
         confirmAlert({
@@ -25,11 +26,11 @@ const Header = ({ user }) => {
             message: 'Êtes-vous sûr de vouloir vous déconnecter ?',
             buttons: [
                 {
-                    label: 'Oui',
+                    label: 'Confirmer',
                     onClick: () => logout()
                 },
                 {
-                    label: 'Non',
+                    label: 'Annuler',
                     onClick: () => {}
                 }
             ]
@@ -42,6 +43,7 @@ const Header = ({ user }) => {
             <div className= "der-container">
                 <div className="logo">
                     <img src={logo} alt="" />
+                    <p>Estimate</p>
                 </div>
                 <div className="menu" >
                     <nav>

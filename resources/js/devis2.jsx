@@ -3,10 +3,8 @@ import './Devis2.css';
 
 const Devis2 = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
     // État pour stocker toutes les informations des trois composants
-    const [volumeFondation, setVolumeFondation] = useState(quoteData.volumeFondation || '');
+    const [volumeFondation, setVolumeDalleBeton] = useState(quoteData.volumeFondation || '');
     const [volumeChappe, setVolumeChappe] = useState(quoteData.volumeChappe || '');
-    const [aireSurface, setAireSurface] = useState(quoteData.aireSurface || 0);
-    const [epaisseurBeton, setEpaisseurBeton] = useState(quoteData.epaisseurBeton || 0.15);
 
     // Utilisation de useEffect pour calculer les matériaux lorsque les valeurs changent
     useEffect(() => {
@@ -41,39 +39,16 @@ const Devis2 = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
                 quantiteGravierChappe,
             }));
         }
-
-        // Calculs pour Dalle
-        const volumeDalle = aireSurface * epaisseurBeton;
-        const quantiteCimentDalle = (volumeDalle * 350) / 50;
-        const quantiteSableDalle = volumeDalle * 0.4 * 1.5;
-        const quantiteGravierDalle = quantiteSableDalle * 2;
-
-        updateQuoteData(prevData => ({
-            ...prevData,
-            aireSurface,
-            epaisseurBeton,
-            volumeDalle,
-            quantiteCimentDalle,
-            quantiteSableDalle,
-            quantiteGravierDalle,
-        }));
-
-    }, [volumeFondation, volumeChappe, aireSurface, epaisseurBeton]);
-
+    })
+    
     const handleChange = (e) => {
         const { name, value } = e.target;
         switch (name) {
             case 'volumeFondation':
-                setVolumeFondation(value);
+                setVolumeDalleBeton(value);
                 break;
             case 'volumeChappe':
                 setVolumeChappe(value);
-                break;
-            case 'aireSurface':
-                setAireSurface(Number(value));
-                break;
-            case 'epaisseurBeton':
-                setEpaisseurBeton(Number(value));
                 break;
             default:
                 break;
@@ -82,12 +57,12 @@ const Devis2 = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
 
     return (
         <div className='devis2'>
-            <h2>Étape 2: Informations Complètes pour le Devis</h2>
+            <h2>Étape 2: Fondation</h2><br />
 
             <div className="section">
                 <h3>Fondation en Moellon</h3>
                 <label>
-                    Volume de la fondation (m³) :
+                    Volume de la Fondation (m³) :
                     <input
                         type="number"
                         name="volumeFondation"
@@ -118,36 +93,6 @@ const Devis2 = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
                 <p>Quantité de ciment : {quoteData.quantiteCimentChappe?.toFixed(2)} sacs</p>
                 <p>Quantité de sable : {quoteData.quantiteSableChappe?.toFixed(2)} tonnes</p>
                 <p>Quantité de gravier : {quoteData.quantiteGravierChappe?.toFixed(2)} tonnes</p>
-            </div>
-
-            <div className="section">
-                <h3>Dalle</h3>
-                <label>
-                    Aire de Surface Habitable ou du Bâtiment (m²):
-                    <input
-                        type="number"
-                        name="aireSurface"
-                        value={aireSurface}
-                        onChange={handleChange}
-                        step="0.01"
-                        min="0"
-                    />
-                </label>
-                <label>
-                    Épaisseur du Béton (m):
-                    <input
-                        type="number"
-                        name="epaisseurBeton"
-                        value={epaisseurBeton}
-                        onChange={handleChange}
-                        step="0.01"
-                        min="0"
-                    />
-                </label>
-                <p>Volume de la Dalle (m³): {quoteData.volumeDalle?.toFixed(2) || 'N/A'}</p>
-                <p>Quantité de Ciment (sacs de 50kg): {quoteData.quantiteCimentDalle?.toFixed(2) || 'N/A'}</p>
-                <p>Quantité de Sable (Tonnes): {quoteData.quantiteSableDalle?.toFixed(2) || 'N/A'}</p>
-                <p>Quantité de Gravier (Tonnes): {quoteData.quantiteGravierDalle?.toFixed(2) || 'N/A'}</p>
             </div>
 
             <br />

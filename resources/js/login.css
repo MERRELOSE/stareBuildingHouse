@@ -4,7 +4,7 @@ body{
 } 
 
 .ctanext{
-    background-color: white;
+    background-color: #ccc;
     height: 400px;
     max-width: 400px;
     border-radius: 38px;
@@ -35,7 +35,7 @@ body{
 }
 
 .input{
-    width: 350px;
+    width: 320px;
     height: 50px;
     background-color: #eaeaea;
     border-radius: 38px;

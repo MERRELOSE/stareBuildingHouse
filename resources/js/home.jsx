@@ -31,22 +31,22 @@ import detail from './components/construction.mp4';
                         <div className="hero-content">
                             <h2>{user && <p>Bonjour, {user.name}!</p>}Obtenez des devis précis pour votre projet de maison</h2>
                             <p>Utilisez notre application pour créer des devis personnalisés et détaillés en quelques étapes simples.</p>
-                            <Link to=""  onClick={handleGetStartedClick} className="cta-button">Commencer Maintenant</Link>
+                            <Link to="" onClick={handleGetStartedClick} className="cta-button">Commencer Maintenant</Link>
                         </div><br/>
                         <div className="hero">
                             <div className="hero-image">
                                 <img src={maison} alt="Construction de maison" />
                             </div>
                             <div className="paragraphe">
-                                <h3>Un titre moyen</h3>
-                                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quibusdam eius, perspiciatis possimus ad laudantium numquam ipsam odit minus! Illum alias nesciunt veniam veritatis consequatur aperiam quos at voluptatem assumenda minus? Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum dolor maxime aspernatur sed rem blanditiis, tenetur obcaecati consectetur sequi eveniet vitae excepturi id inventore. Voluptatem repudiandae vel ducimus quam minus. </p>
+                                <h3>Simple et éfficace</h3>
+                                <p>Créez facilement des estimations à partir de votre téléphone, tablette ou ordinateur. Copiez les éléments d'un modèle d'estimation précédent ou importez-les depuis votre base de données relative aux postes de dépenses. Une fois terminé, envoyez l'estimation au client pour recuellir sa signature et son approbation en ligne. </p>
                             </div>
                         </div>
                         
                         <div className="hero1">
                             <div className="paragraphe2">
-                                <h3>Un titre moyen</h3>
-                                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quibusdam eius, perspiciatis possimus ad laudantium numquam ipsam odit minus! Illum alias nesciunt veniam veritatis consequatur aperiam quos at voluptatem assumenda minus? Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum dolor maxime aspernatur sed rem blanditiis, tenetur obcaecati consectetur sequi eveniet vitae excepturi id inventore. Voluptatem repudiandae vel ducimus quam minus. </p>
+                                <h3>Gestion du profil</h3>
+                                <p>Des calculs précis permettent de générer des estimations compétitives. Obtenez plus de contrats grâce à des estimations rapides basées sur ds calculs précis. Une plateforme cloud garantit que vous travaillez toujours avec les derniers documents et vouys permet de collaborer efficacement avec chaque équipe de construction.</p>
                             </div>
                             <div className="hero-image2">
                                 <img src={plan} alt="Plan de construction de maison" />

@@ -4,11 +4,11 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from './AuthContext';
 import Home from './Home';
 import Login from './Login';
-import Devis from './Devis'; //Le composant principal pour le devis
 import Header from './Header';
 import Signup from './Signup';
 import Footer from './Footer';
 import ProfilePage from './ProfilePage';
+import Devis from './Devis';
 
 const App = () => {
     const [user, setUser] = useState(null);

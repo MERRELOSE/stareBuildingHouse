@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './Devis.css'
 import Devis1 from './Devis1.jsx';
 import Devis2 from './Devis2';
 import Devis5 from './Devis5';
@@ -122,34 +123,16 @@ const Devis = () => {
                         updateQuoteData={updateQuoteData}
                     />
                 );
-
             case 6:
                 return (
                     <ToitureSelector
                         nextStep={nextStep}
                         prevStep={prevStep}
+                        quoteData={quoteData}
                         updateQuoteData={updateQuoteData}
                     />
-                );
+                    );
             case 7:
-                if (quoteData.typeToiture) {
-                    return (
-                        <ToitureSelector
-                            typeToiture={quoteData.typeToiture}
-                            nextStep={nextStep}
-                            prevStep={prevStep}
-                            updateQuoteData={updateQuoteData}
-                        />
-                    );
-                } else {
-                    return (
-                        <div>
-                            <p>Sélectionnez d'abord un type de toiture.</p>
-                            <button onClick={prevStep}>Retour</button>
-                        </div>
-                    );
-                }
-            case 8:
                 if (quoteData.materialToiture === 'toleGalvanisee') {
                     return (
                         <Devis7
@@ -168,7 +151,7 @@ const Devis = () => {
                         </div>
                     );
                 }
-            case 9:
+            case 8:
                     return (
                         <Devis8
                             nextStep={nextStep}
@@ -177,7 +160,7 @@ const Devis = () => {
                             updateQuoteData={updateQuoteData}
                         />
                     );
-            case 10:
+            case 9:
                 return (
                     <TileSelection
                         nextStep={nextStep}
@@ -186,7 +169,7 @@ const Devis = () => {
                         updateQuoteData={updateQuoteData}
                     />
                 );
-            case 11:
+            case 10:
                 return (
                     <DevisFinal
                         quoteData={quoteData}

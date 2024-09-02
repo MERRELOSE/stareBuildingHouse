@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import './Devis7.css';
 
 const Devis7 = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
-    const [ecartementFermes, setEcartementFermes] = useState(2); // Valeur par défaut de 2m pour l'écartement
+    const [ecartementFermes, setEcartementFermes] = useState(3); // Valeur par défaut de 2m pour l'écartement
+    const [longueurDevelopper, setLongueurDevelopper] = useState('');
     const [nombreFermes, setNombreFermes] = useState(0);
     const [dimensionFerme, setDimensionFerme] = useState('');
     const [nombreMadrier, setNombreMadrier] = useState(0);
@@ -11,11 +12,11 @@ const Devis7 = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
     // Utiliser useEffect pour calculer le nombre de fermes chaque fois que l'écartement ou le périmètre change
     useEffect(() => {
         calculerNombreFermes();
-    }, [ecartementFermes, quoteData.perimetre]);
+    }, [ecartementFermes, quoteData.longueurDevelopper]);
 
     // Calcul du nombre de fermes
-    const calculerNombreFermes = () => {
-        const lb = parseFloat(quoteData.perimetre) || 0;
+    const calculerNombreFermes = () =>{ 
+        const lb = parseFloat(longueurDevelopper) || 0;
         const nf = Math.ceil(lb / ecartementFermes);
         setNombreFermes(nf);
     };
@@ -38,10 +39,23 @@ const Devis7 = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
         setDimensionFerme(e.target.value);
     };
 
+    const handleLongueurChange = (e) => {
+        setLongueurDevelopper(e.target.value);
+    };
+
+    /*const handleDimensionChange = (e) => {
+        const { name, value } = e.target;
+        if (name === 'dimensionFerme') {
+            setDimensionFerme(Number(value));
+        } else if (name === 'longueurDevelopper') {
+            setLongueurDevelopper(Number(value));
+        }}*/
+
+
     // Envoi des données au parent
     const handleSubmit = () => {
         // Vérification des champs requis
-        if (dimensionFerme && nombreFermes && nombreChevrons) {
+        if (longueurDevelopper && dimensionFerme && nombreFermes && nombreChevrons) {
             updateQuoteData({
                 ...quoteData,
                 nombreFermes,
@@ -58,6 +72,21 @@ const Devis7 = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
     return (
         <div className="devis7">
             <h2>Étape 5: Toiture - Madrier et Chevrons</h2>
+
+            <div className="form-group">
+                <label htmlFor="longueurDevelopper">
+                    Longueur developper (Ld en m) :
+                </label>
+                <input
+                    type="number"
+                    id="longueurDevelopper"
+                    value={longueurDevelopper}
+                    onChange={handleLongueurChange}
+                    placeholder="Entrez la longueur developper du batiment"
+                    step="0.5"
+                    min="0"
+                />
+            </div>
             <div className="form-group">
                 <label htmlFor="ecartementFermes">
                     Ecartement entre fermes (m) :
@@ -67,10 +96,12 @@ const Devis7 = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
                     value={ecartementFermes}
                     onChange={(e) => setEcartementFermes(parseFloat(e.target.value))}
                 >
+                    <option >switch</option>
                     <option value={1.5}>1.5 m</option>
                     <option value={2}>2 m</option>
                 </select>
             </div>
+
             <div className="form-group">
                 <label htmlFor="nombreFermes">
                     Nombre de fermes (Nf) :
@@ -99,6 +130,7 @@ const Devis7 = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
                     min="0"
                 />
             </div>
+
             <div className="form-group">
                 <label htmlFor="nombreMadrier">
                     Nombre de madriers :
