@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import './TileSelection.css';
-import CeramiqueImg from './components/céramique.jpg';
-import GresImg from './components/grès.jpg';
-import PorcelaineImg from './components/Porcelaine.jpg';
-import MosaiqueImg from './components/Mosaique.jpg';
+import CeramiqueImg from '../components/assets/ceramique.jpg';
+import GresImg from '../components/assets/gres.jpg';
+import PorcelaineImg from '../components/assets/Porcelaine.jpg';
+import MosaiqueImg from '../components/assets/Mosaique.jpg';
 
 const TileSelection = ({ nextStep, prevStep, updateQuoteData, skipStep }) => {
   // État pour le choix du type de carreau

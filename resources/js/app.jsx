@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { AuthProvider } from './AuthContext';
-import Home from './Home';
-import Login from './Login';
-import Header from './Header';
-import Signup from './Signup';
-import Footer from './Footer';
-import ProfilePage from './ProfilePage';
-import Devis from './Devis';
+import { AuthProvider } from './AuthContext/AuthContext.jsx';
+import Home from './Home/Home.jsx';
+import Login from './Login/Login.jsx';
+import Header from './Header/Header.jsx';
+import Signup from './Signup/Signup.jsx';
+import Footer from './Footer/Footer.jsx';
+import ProfilePage from './Profile/ProfilePage.jsx';
+import Devis from './SwitchFile/Devis.jsx';
 
 const App = () => {
     const [user, setUser] = useState(null);

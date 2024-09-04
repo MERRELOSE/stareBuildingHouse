@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import './ToitureSelector.css'; // Fichier CSS pour le style
-import Verre from './components/verre.jpg'
-import Ardoise from './components/ardoise.jpg'
-import Métal from './components/métal.jpg'
-import Etanchéité from './components/étanchéité.jpg'
-import Galvanisée from './components/galvanisé.jpg'
-import Tuiles from './components/Tuiles.jpg'
+import Verre from '../components/assets/verre.jpg'
+import Ardoise from '../components/assets/ardoise.jpg'
+import Métal from '../components/assets/metal.jpg'
+import Etanchéité from '../components/assets/etancheite.jpg'
+import Galvanisée from '../components/assets/galvanise.jpg'
+import Tuiles from '../components/assets/Tuiles.jpg'
 
 
 // Composant principal pour la sélection de toiture

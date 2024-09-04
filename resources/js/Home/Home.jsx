@@ -1,15 +1,15 @@
 import React from 'react';
 import { Link, useNavigate} from 'react-router-dom';
 import './Home.css';
-import maison from './components/Constructiondemaison1.jpg';
-import plan from './components/Constructiondemaisonplan.jpg';
-import plan1 from './components/plan1.jpg';
-import plan2 from './components/plan2.jpg';
-import plan3 from './components/plan3.jpg';
-import plan4 from './components/plan4.jpg';
-import plan5 from './components/plan5.jpg';
-import plan6 from './components/plan6.jpg';
-import detail from './components/construction.mp4';
+import maison from '../components/assets/Constructiondemaison1.jpg';
+import plan from '../components/assets/Constructiondemaisonplan.jpg';
+import plan1 from '../components/assets/plan1.jpg';
+import plan2 from '../components/assets/plan2.jpg';
+import plan3 from '../components/assets/plan3.jpg';
+import plan4 from '../components/assets/plan4.jpg';
+import plan5 from '../components/assets/plan5.jpg';
+import plan6 from '../components/assets/plan6.jpg';
+import detail from '../components/assets/construction.mp4';
 
 
     

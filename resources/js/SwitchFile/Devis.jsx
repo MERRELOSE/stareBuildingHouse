@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import './Devis.css'
-import Devis1 from './Devis1.jsx';
-import Devis2 from './Devis2';
-import Devis5 from './Devis5';
-import Devis6 from './Devis6';
-import Elevation from './Elevation'; // Import du nouveau composant Élévation
-import ToitureSelector from './ToitureSelector';
-import Devis7 from './Devis7';
-import Devis8 from './Devis8';
-import TileSelection from './TileSelection';  // Composant pour la sélection de revêtement de sol
-import DevisFinal from './DevisFinal'; // ImportATION le composant final
+import Devis1 from '../Terrassement/Devis1.jsx';
+import Devis2 from '../Fondation/Devis2';
+import Devis5 from '../Blocs/Devis5';
+import Devis6 from '../Beton/Devis6';
+import Elevation from '../ElevationDesMurs/Elevation'; // Import du nouveau composant Élévation
+import ToitureSelector from '../Toiture/ToitureSelector';
+import Devis7 from '../ToitureTwo/Devis7';
+import Devis8 from '../ToleGalvanisee/Devis8';
+import TileSelection from '../TileCarreau/TileSelection';  // Composant pour la sélection de revêtement de sol
+import DevisFinal from '../Devis/DevisFinal'; // Importation du composant final
 
 const Devis = () => {
     const [step, setStep] = useState(1); // Étape actuelle du processus de devis
