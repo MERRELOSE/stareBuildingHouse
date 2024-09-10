@@ -6,7 +6,7 @@ import PorcelaineImg from '../components/assets/Porcelaine.jpg';
 import MosaiqueImg from '../components/assets/Mosaique.jpg';
 
 const TileSelection = ({ nextStep, prevStep, updateQuoteData, skipStep }) => {
-  // État pour le choix du type de carreau
+  // États pour les choix et les dimensions
   const [selectedTile, setSelectedTile] = useState(null);
   const [tileLength, setTileLength] = useState(''); // en cm
   const [tileWidth, setTileWidth] = useState('');  // en cm
@@ -43,7 +43,6 @@ const TileSelection = ({ nextStep, prevStep, updateQuoteData, skipStep }) => {
       pricePerSquareMeter: 35,
       imageUrl: MosaiqueImg,
     },
-    // Ajouter d'autres options si nécessaire
   ];
 
   // Fonction pour gérer la sélection du carreau
@@ -52,39 +51,72 @@ const TileSelection = ({ nextStep, prevStep, updateQuoteData, skipStep }) => {
     setTileLength(tile.size.length);
     setTileWidth(tile.size.width);
     updateQuoteData({ tileType: tile.name });
+    console.log("Carreau sélectionné:", tile);
+    console.log("Dimensions mises à jour:", {
+      length: tile.size.length,
+      width: tile.size.width
+    });
   };
 
   // Calcul du nombre de carreaux nécessaires
   const calculateTilesNeeded = () => {
     const area = parseFloat(floorArea); // en m²
-    const tileArea = (tileLength * tileWidth) / 10000; // en m² par carreau
-
-    if (!area || !tileArea) return null;
-
+    const tileArea = (parseFloat(tileLength) * parseFloat(tileWidth)) / 10000; // en m² par carreau
+  
+    if (!area || !tileArea || !selectedTile) return null;
+  
     const baseTilesNeeded = Math.ceil(area / tileArea);
-
-    // Ajout du pourcentage de sécurité
-    let safetyPercentage = 0.05; // Pose droite par défaut
+    console.log("Base des carreaux nécessaires:", baseTilesNeeded);
+  
+    let safetyPercentage = 0.05;
     if (tileLayout === 'cross') {
-      safetyPercentage = 0.15; // Pose croisée
+      safetyPercentage = 0.15;
     }
-
+  
     const totalTilesNeeded = Math.ceil(baseTilesNeeded * (1 + safetyPercentage));
     const totalCost = totalTilesNeeded * tileArea * selectedTile.pricePerSquareMeter;
-
+    
+    console.log("Calcul des carreaux nécessaires:", {
+      baseTilesNeeded,
+      safetyPercentage,
+      totalTilesNeeded,
+      tileArea,
+      totalCost
+    });
+  
     return { totalTilesNeeded, totalCost };
   };
-
+  
   const tileDetails = selectedTile && calculateTilesNeeded();
 
   // Validation des entrées et passage à l'étape suivante
   const handleSubmit = () => {
-    if (selectedTile && floorArea) {
+    if (selectedTile && floorArea && tileLength && tileWidth) {
+      const { totalTilesNeeded, totalCost } = tileDetails;
+      updateQuoteData({
+        tileType: selectedTile.name,
+        tileLength,
+        tileWidth,
+        floorArea,
+        tileLayout,
+        totalTilesNeeded,
+        totalCost,
+      });
+      console.log("Données mises à jour dans quoteData:", {
+        tileType: selectedTile.name,
+        tileLength,
+        tileWidth,
+        floorArea,
+        tileLayout,
+        totalTilesNeeded,
+        totalCost,
+      });
       nextStep();
     } else {
-      alert('Veuillez sélectionner un type de carreau et entrer la surface.');
+      alert('Veuillez sélectionner un type de carreau, entrer les dimensions et la surface.');
     }
   };
+  
 
   return (
     <div className="tile-selection-container">
@@ -122,6 +154,29 @@ const TileSelection = ({ nextStep, prevStep, updateQuoteData, skipStep }) => {
           value={floorArea}
           onChange={(e) => setFloorArea(e.target.value)}
           placeholder="Entrer la surface en m²"
+          step="0.01"
+          min="0"
+        />
+      </div>
+
+      {/* Entrée des dimensions des carreaux */}
+      <div className="tile-dimensions-input">
+        <h3>Dimensions des Carreaux (en cm)</h3>
+        <input
+          type="number"
+          value={tileLength}
+          onChange={(e) => setTileLength(e.target.value)}
+          placeholder="Longueur du carreau"
+          step="0.01"
+          min="0"
+        />
+        <input
+          type="number"
+          value={tileWidth}
+          onChange={(e) => setTileWidth(e.target.value)}
+          placeholder="Largeur du carreau"
+          step="0.01"
+          min="0"
         />
       </div>
 

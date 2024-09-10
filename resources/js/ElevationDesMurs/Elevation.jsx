@@ -2,15 +2,28 @@ import React, { useState } from 'react';
 import './Elevation.css';
 
 const Elevation = ({ nextStep, prevStep, updateQuoteData }) => {
-  // États pour stocker les choix de l'utilisateur concernant les murs
   const [material, setMaterial] = useState('');
   const [thickness, setThickness] = useState('');
   const [height, setHeight] = useState('');
-  const [ncl, setNcl] = useState(''); // Nombre de colonnes
-  const [hcl, setHcl] = useState(''); // Hauteur des colonnes
-  const [nv, setNv] = useState(''); // Niveau d'élévation
+  const [ncl, setNcl] = useState('');
+  const [hcl, setHcl] = useState('');
+  const [nv, setNv] = useState('');
 
-  // Calcul des armatures
+  // Prix des matériaux
+  const materialPrices = {
+    brique: 50,  // prix par m²
+    béton: 80,   // prix par m²
+    bois: 60     // prix par m²
+  };
+
+  // Épaisseurs en cm et leurs prix
+  const thicknessPrices = {
+    '15cm': 25,  // prix par m²
+    '20cm': 30,  // prix par m²
+    '25cm': 35   // prix par m²
+  };
+
+  // Fonction pour calculer les armatures
   const calculateArmature = () => {
     if (!ncl || !hcl || !nv) return null;
 
@@ -18,19 +31,17 @@ const Elevation = ({ nextStep, prevStep, updateQuoteData }) => {
     const hclNum = parseFloat(hcl);
     const nvNum = parseInt(nv);
 
-    // Calcul des barres longitudinales
+    // Calcul des barres longitudinales et des étriers
     const blUnitaire = hclNum * 4 * nvNum;
-    const blTotal = (blUnitaire * nclNum + 24) / 12; // en barres de 10
-
-    // Calcul des étriers
-    const espacement = 0.2; // Espacement entre deux étriers
+    const blTotal = (blUnitaire * nclNum + 24) / 12; // barres de 10
+    const espacement = 0.2;
     const net = (hclNum / espacement) * nclNum;
-    const etrierTotal = (0.54 * net + 24) / 12; // en barres de 6
+    const etrierTotal = (0.54 * net + 24) / 12; // barres de 6
 
     return { blUnitaire, blTotal, net, etrierTotal };
   };
 
-  // Calcul du béton
+  // Fonction pour calculer le béton
   const calculateBeton = () => {
     if (!ncl || !hcl || !thickness) return null;
 
@@ -38,147 +49,113 @@ const Elevation = ({ nextStep, prevStep, updateQuoteData }) => {
     const hclNum = parseFloat(hcl);
     const thicknessNum = parseFloat(thickness);
 
-    // Calcul du volume
     const volume = thicknessNum * hclNum * nclNum;
-
-    // Quantités de béton
-    const qCiment = (volume * 350) / 50; // en sacs de ciment
-    const qSable = volume * 0.4 * 1.5; // en tonnes
-    const qCaillasse = volume * 0.8 * 1.6; // en tonnes
-    const eauGachage = 160 * volume; // en litres
+    const qCiment = (volume * 350) / 50; // sacs de ciment
+    const qSable = volume * 0.4 * 1.5; // tonnes
+    const qCaillasse = volume * 0.8 * 1.6; // tonnes
+    const eauGachage = 160 * volume; // litres
 
     return { volume, qCiment, qSable, qCaillasse, eauGachage };
   };
 
-  // Fonction pour gérer la sélection du matériau des murs
-  const handleMaterialSelect = (selectedMaterial) => {
-    setMaterial(selectedMaterial);
-    updateQuoteData({ material: selectedMaterial });
+  // Fonction pour calculer le coût total
+  const calculateCost = () => {
+    if (!material || !thickness || !height || !ncl) return null;
+
+    const materialCost = materialPrices[material] || 0;
+    const thicknessCost = thicknessPrices[thickness] || 0;
+    const heightNum = parseFloat(height);
+
+    const area = ncl * heightNum; // m²
+    const cost = (materialCost + thicknessCost) * area;
+
+    return cost;
   };
 
-  // Fonction pour gérer la sélection de l'épaisseur des murs
-  const handleThicknessSelect = (selectedThickness) => {
-    setThickness(selectedThickness);
-    updateQuoteData({ thickness: selectedThickness });
-  };
-
-  // Fonction pour gérer la sélection de la hauteur des murs
-  const handleHeightSelect = (selectedHeight) => {
-    setHeight(selectedHeight);
-    updateQuoteData({ height: selectedHeight });
+  // Fonction pour gérer la sélection des options
+  const handleSelect = (setter) => (value) => {
+    setter(value);
+    updateQuoteData({ [setter.name]: value });
   };
 
   // Fonction pour passer à l'étape suivante
   const handleSubmit = () => {
+    // Vérification si tous les champs sont remplis
     if (!material || !thickness || !height || !ncl || !hcl || !nv) {
-      alert('Veuillez sélectionner tous les paramètres des murs.');
-      return;
+        alert('Veuillez remplir tous les champs requis.');
+        return;
     }
-    
+
+    // Vérification des valeurs numériques pour les colonnes
     if (parseFloat(ncl) <= 0 || parseFloat(hcl) <= 0 || parseInt(nv) <= 0) {
-      alert('Veuillez entrer des valeurs valides pour les colonnes.');
-      return;
+        alert('Veuillez entrer des valeurs valides pour les colonnes.');
+        return;
     }
-  
+
+    // Mise à jour des données de devis
+    updateQuoteData({
+        material,
+        thickness,
+        height,
+        ncl,
+        hcl,
+        nv,
+        cost: calculateCost() // Ajout du coût total aux données du devis
+    });
+
+    // Passage à l'étape suivante
     nextStep();
-  };
-  
-  // Données calculées pour affichage
+};
+
+
   const armature = calculateArmature();
   const beton = calculateBeton();
+  const cost = calculateCost();
 
   return (
     <div className="elevation-des-murs-container">
       <h2>Élévation des Murs</h2>
 
       {/* Sélection du matériau des murs */}
-      <div className="material-selection">
+      <div className="selection-section">
         <h3>Matériau des Murs</h3>
-        <div className="button-group">
+        {['brique', 'béton', 'bois'].map((mat) => (
           <button
-            className={`material-button ${
-              material === 'brique' ? 'active' : ''
-            }`}
-            onClick={() => handleMaterialSelect('brique')}
+            key={mat}
+            className={`selection-button ${material === mat ? 'active' : ''}`}
+            onClick={() => handleSelect(setMaterial)(mat)}
           >
-            Brique
-            <p className="tooltip">Durable et esthétique, idéal pour un aspect traditionnel.</p>
+            {mat.charAt(0).toUpperCase() + mat.slice(1)}
           </button>
-          <button
-            className={`material-button ${
-              material === 'béton' ? 'active' : ''
-            }`}
-            onClick={() => handleMaterialSelect('béton')}
-          >
-            Béton
-            <p className="tooltip">Solide et robuste, parfait pour des constructions modernes.</p>
-          </button>
-          <button
-            className={`material-button ${
-              material === 'bois' ? 'active' : ''
-            }`}
-            onClick={() => handleMaterialSelect('bois')}
-          >
-            Bois
-            <p className="tooltip">Écologique et naturel, offre une excellente isolation.</p>
-          </button>
-        </div>
+        ))}
       </div>
 
       {/* Sélection de l'épaisseur des murs */}
-      <div className="thickness-selection">
+      <div className="selection-section">
         <h3>Épaisseur des Murs</h3>
-        <div className="button-group">
+        {['15cm', '20cm', '25cm'].map((thk) => (
           <button
-            className={`thickness-button ${
-              thickness === '15cm' ? 'active' : ''
-            }`}
-            onClick={() => handleThicknessSelect('15cm')}
+            key={thk}
+            className={`selection-button ${thickness === thk ? 'active' : ''}`}
+            onClick={() => handleSelect(setThickness)(thk)}
           >
-            15 cm
+            {thk}
           </button>
-          <button
-            className={`thickness-button ${
-              thickness === '20cm' ? 'active' : ''
-            }`}
-            onClick={() => handleThicknessSelect('20cm')}
-          >
-            20 cm
-          </button>
-          <button
-            className={`thickness-button ${
-              thickness === '25cm' ? 'active' : ''
-            }`}
-            onClick={() => handleThicknessSelect('25cm')}
-          >
-            25 cm
-          </button>
-        </div>
+        ))}
       </div>
 
       {/* Sélection de la hauteur des murs */}
-      <div className="height-selection">
+      <div className="selection-section">
         <h3>Hauteur des Murs</h3>
-        <div className="button-group">
+        {['2.5m', '3m', '3.5m'].map((hgt) => (
           <button
-            className={`height-button ${height === '2.5m' ? 'active' : ''}`}
-            onClick={() => handleHeightSelect('2.5m')}
+            key={hgt}
+            className={`selection-button ${height === hgt ? 'active' : ''}`}
+            onClick={() => handleSelect(setHeight)(hgt)}
           >
-            2.5 m
+            {hgt}
           </button>
-          <button
-            className={`height-button ${height === '3m' ? 'active' : ''}`}
-            onClick={() => handleHeightSelect('3m')}
-          >
-            3 m
-          </button>
-          <button
-            className={`height-button ${height === '3.5m' ? 'active' : ''}`}
-            onClick={() => handleHeightSelect('3.5m')}
-          >
-            3.5 m
-          </button>
-        </div>
+        ))}
       </div>
 
       {/* Input pour les colonnes */}
@@ -192,6 +169,7 @@ const Elevation = ({ nextStep, prevStep, updateQuoteData }) => {
             value={ncl}
             onChange={(e) => setNcl(e.target.value)}
             placeholder="Nombre de colonnes"
+            min={4}
           />
         </div>
         <div className="input-group">
@@ -202,16 +180,18 @@ const Elevation = ({ nextStep, prevStep, updateQuoteData }) => {
             value={hcl}
             onChange={(e) => setHcl(e.target.value)}
             placeholder="Hauteur des colonnes"
+            min={1}
           />
         </div>
         <div className="input-group">
-          <label htmlFor="nv">Niveau d'élévation :</label>
+          <label htmlFor="nv">Niveau d'élevation (Nombre d'étage) :</label>
           <input
             type="number"
             id="nv"
             value={nv}
             onChange={(e) => setNv(e.target.value)}
             placeholder="Niveau d'élévation"
+            min={1}
           />
         </div>
       </div>
@@ -247,7 +227,7 @@ const Elevation = ({ nextStep, prevStep, updateQuoteData }) => {
           </div>
           <div className="result-item">
             <span>Quantité de ciment : </span>
-            <span>{beton.qCiment.toFixed(0)} sacs</span>
+            <span>{beton.qCiment.toFixed(2)} sacs</span>
           </div>
           <div className="result-item">
             <span>Quantité de sable : </span>
@@ -259,14 +239,23 @@ const Elevation = ({ nextStep, prevStep, updateQuoteData }) => {
           </div>
           <div className="result-item">
             <span>Eau de gâchage : </span>
-            <span>{beton.eauGachage.toFixed(0)} L</span>
+            <span>{beton.eauGachage.toFixed(2)} litres</span>
           </div>
         </div>
       )}
 
-      {/* Boutons de navigation */}
-      <div className="navigation-buttons">
-        <button onClick={prevStep}>Retour</button>
+      {cost && (
+        <div className="cost-summary">
+          <h3>Coût Total Estimé</h3>
+          <div className="result-item">
+            <span>Coût total des matériaux : </span>
+            <span>{cost.toFixed(2)} €</span>
+          </div>
+        </div>
+      )}
+
+      <div className="buttons">
+        <button onClick={prevStep}>Précédent</button>
         <button onClick={handleSubmit}>Suivant</button>
       </div>
     </div>

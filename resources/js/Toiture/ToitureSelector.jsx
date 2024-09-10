@@ -1,142 +1,98 @@
 import React, { useState } from 'react';
 import './ToitureSelector.css'; // Fichier CSS pour le style
-import Verre from '../components/assets/verre.jpg'
-import Ardoise from '../components/assets/ardoise.jpg'
-import Métal from '../components/assets/metal.jpg'
-import Etanchéité from '../components/assets/etancheite.jpg'
-import Galvanisée from '../components/assets/galvanise.jpg'
-import Tuiles from '../components/assets/Tuiles.jpg'
+import Verre from '../components/assets/verre.jpg';
+import Ardoise from '../components/assets/ardoise.jpg';
+import Métal from '../components/assets/metal.jpg';
+import Etanchéité from '../components/assets/etancheite.jpg';
+import Galvanisée from '../components/assets/galvanise.jpg';
+import Tuiles from '../components/assets/Tuiles.jpg';
 
+const materialsOptions = {
+    plat: [
+        { name: 'Tôle Galvanisée', value: 'toleGalvanisee', img: Galvanisée, desc: 'Durable et résistant à la corrosion. Idéal pour une protection longue durée.', price: 30 },
+        { name: 'Étanchéité', value: 'etanche', img: Etanchéité, desc: "Assure une protection complète contre l'humidité. Parfait pour les toits plats.", price: 45 }
+    ],
+    pente: [
+        { name: 'Tuiles', value: 'tuiles', img: Tuiles, desc: 'Traditionnelles et esthétiques. Bonnes performances en termes de ventilation.', price: 40 },
+        { name: 'Ardoise', value: 'ardoise', img: Ardoise, desc: 'Matériau durable et élégant. Excellente résistance aux intempéries.', price: 70 }
+    ],
+    voute: [
+        { name: 'Verre', value: 'verre', img: Verre, desc: 'Permet une lumière naturelle abondante. Esthétique moderne.', price: 100 },
+        { name: 'Métal', value: 'metal', img: Métal, desc: 'Durable et résistant aux conditions climatiques extrêmes. Faible entretien.', price: 60 }
+    ]
+};
 
-// Composant principal pour la sélection de toiture
 const ToitureSelector = ({ nextStep, prevStep, updateQuoteData }) => {
-    // États pour stocker le type et le matériau de toiture choisis
     const [typeToiture, setTypeToiture] = useState('');
     const [materialToiture, setMaterialToiture] = useState('');
+    const [materialPrice, setMaterialPrice] = useState(0);
 
-    // Fonction pour gérer la sélection du type de toiture
     const handleTypeSelect = (type) => {
-        setTypeToiture(type); // Mettre à jour l'état du type de toiture
-        setMaterialToiture(''); // Réinitialiser l'état du matériau lorsque le type de toiture change
+        setTypeToiture(type);
+        setMaterialToiture(''); // Réinitialiser le matériau lors du changement de type
+        setMaterialPrice(0); // Réinitialiser le prix lors du changement de type
     };
 
-    // Fonction pour gérer la sélection du matériau de toiture
-    const handleMaterialSelect = (material) => {
-        setMaterialToiture(material); // Mettre à jour l'état du matériau de toiture
-        updateQuoteData({ typeToiture, materialToiture: material }); // Mettre à jour les données de devis
+    const handleMaterialSelect = (value) => {
+        const selectedMaterial = materialsOptions[typeToiture].find(mat => mat.value === value);
+        setMaterialToiture(value);
+        setMaterialPrice(selectedMaterial.price);
+        updateQuoteData({ typeToiture, materialToiture: value, materialPrice: selectedMaterial.price });
     };
 
-    // Fonction pour soumettre la sélection et passer à l'étape suivante
     const handleSubmit = () => {
         if (typeToiture && materialToiture) {
-            nextStep(); // Passer à l'étape suivante si les sélections sont complètes
+            nextStep();
         } else {
-            alert('Veuillez sélectionner un type de toiture et un matériau.'); // Afficher une alerte si une sélection est manquante
+            alert('Veuillez sélectionner un type de toiture et un matériau.');
         }
     };
 
     return (
         <div className="toiture-selector-container">
             <h2>Sélectionnez le type et le matériau de toiture</h2>
-
-            {/* Section de sélection du type de toiture */}
             <div className="type-selection">
                 <h3>Type de Toit</h3>
                 <div className="button-group">
-                    <button
-                        className={`type-button ${typeToiture === 'plat' ? 'active' : ''}`} // Bouton pour le type de toiture plat
-                        onClick={() => handleTypeSelect('plat')}
-                    >
-                        Toit Plat
-                    </button>
-                    <button
-                        className={`type-button ${typeToiture === 'pente' ? 'active' : ''}`} // Bouton pour le type de toiture en pente
-                        onClick={() => handleTypeSelect('pente')}
-                    >
-                        Toit en Pente
-                    </button>
-                    <button
-                        className={`type-button ${typeToiture === 'voute' ? 'active' : ''}`} // Bouton pour le type de toiture voûté
-                        onClick={() => handleTypeSelect('voute')}
-                    >
-                        Toit Voûté
-                    </button>
+                    {['plat', 'pente', 'voute'].map((type) => (
+                        <button
+                            key={type}
+                            className={`type-button ${typeToiture === type ? 'active' : ''}`}
+                            onClick={() => handleTypeSelect(type)}
+                        >
+                            Toit {type === 'plat' ? 'Plat' : type === 'pente' ? 'en Pente' : 'Voûté'}
+                        </button>
+                    ))}
                 </div>
             </div>
 
-            {/* Section de sélection des matériaux, affichée dynamiquement en fonction du type de toiture choisi */}
             {typeToiture && (
                 <div className="material-selection">
                     <h2>Matériau pour le {typeToiture === 'plat' ? 'Toit Plat' : typeToiture === 'pente' ? 'Toit en Pente' : 'Toit Voûté'}</h2>
                     <div className="button-group">
-                        {/* Options pour le type de toiture plat */}
-                        {typeToiture === 'plat' && (
-                            <>
-                                <button
-                                    className={`material-button ${materialToiture === 'toleGalvanisee' ? 'active' : ''}`} // Bouton pour le matériau Tôle Galvanisée
-                                    onClick={() => handleMaterialSelect('toleGalvanisee')}
-                                >
-                                    <h3>Tôle Galvanisée</h3>
-                                    <img src={Galvanisée} alt="Tôle Galvanisée" />
-                                    <p>Durable et résistant à la corrosion. Idéal pour une protection longue durée.</p>
-                                </button>
-                                <button
-                                    className={`material-button ${materialToiture === 'etanche' ? 'active' : ''}`} // Bouton pour le matériau Étanchéité
-                                    onClick={() => handleMaterialSelect('etanche')}
-                                >
-                                    <h3>Étanchéité</h3>
-                                    <img src={Etanchéité} alt="Étanchéité" />
-                                    <p>Assure une protection complète contre l'humidité. Parfait pour les toits plats.</p>
-                                </button>
-                            </>
-                        )}
-                        {/* Options pour le type de toiture en pente */}
-                        {typeToiture === 'pente' && (
-                            <>
-                                <button
-                                    className={`material-button ${materialToiture === 'tuiles' ? 'active' : ''}`} // Bouton pour le matériau Tuiles
-                                    onClick={() => handleMaterialSelect('tuiles')}
-                                >
-                                    <h3>Tuiles</h3>
-                                    <img src={Tuiles} alt="Tuiles" />
-                                    <p>Traditionnelles et esthétiques. Bonnes performances en termes de ventilation.</p>
-                                </button>
-                                <button
-                                    className={`material-button ${materialToiture === 'ardoise' ? 'active' : ''}`} // Bouton pour le matériau Ardoise
-                                    onClick={() => handleMaterialSelect('ardoise')}
-                                >
-                                    <h3>Ardoise</h3>
-                                    <img src={Ardoise} alt="Ardoise" />
-                                    <p>Matériau durable et élégant. Excellente résistance aux intempéries.</p>
-                                </button>
-                            </>
-                        )}
-                        {/* Options pour le type de toiture voûté */}
-                        {typeToiture === 'voute' && (
-                            <>
-                                <button
-                                    className={`material-button ${materialToiture === 'verre' ? 'active' : ''}`} // Bouton pour le matériau Verre
-                                    onClick={() => handleMaterialSelect('verre')}
-                                >
-                                    <h3>Verre</h3>
-                                    <img src={Verre}  alt="Verre" />
-                                    <p>Permet une lumière naturelle abondante. Esthétique moderne.</p>
-                                </button>
-                                <button
-                                    className={`material-button ${materialToiture === 'metal' ? 'active' : ''}`} // Bouton pour le matériau Métal
-                                    onClick={() => handleMaterialSelect('metal')}
-                                >
-                                    <h3>Métal</h3>
-                                    <img src={Métal} alt="Métal" />
-                                    <p>Durable et résistant aux conditions climatiques extrêmes. Faible entretien.</p>
-                                </button>
-                            </>
-                        )}
+                        {materialsOptions[typeToiture].map(({ name, value, img, desc, price }) => (
+                            <button
+                                key={value}
+                                className={`material-button ${materialToiture === value ? 'active' : ''}`}
+                                onClick={() => handleMaterialSelect(value)}
+                            >
+                                <h3>{name}</h3>
+                                <img src={img} alt={name} />
+                                <p>{desc}</p>
+                                <p>Prix : {price} €/m²</p>
+                            </button>
+                        ))}
                     </div>
                 </div>
             )}
 
-            {/* Boutons de navigation */}
+            {materialToiture && (
+                <div className="cost-summary">
+                    <h3>Coût Estimé du Matériau Sélectionné</h3>
+                    <p>Prix : {materialPrice} €/m²</p>
+                </div>
+            )}
+
             <div className="navigation-buttons">
                 <button onClick={prevStep}>Retour</button>
                 <button onClick={handleSubmit}>Suivant</button>

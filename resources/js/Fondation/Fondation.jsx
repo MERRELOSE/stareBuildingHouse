@@ -1,19 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import './Devis2.css';
+import './Fondation.css';
 
-const Devis2 = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
-    // État pour stocker toutes les informations des trois composants
+const Fondation = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
     const [volumeFondation, setVolumeDalleBeton] = useState(quoteData.volumeFondation || '');
     const [volumeChappe, setVolumeChappe] = useState(quoteData.volumeChappe || '');
 
-    // Utilisation de useEffect pour calculer les matériaux lorsque les valeurs changent
+    // Coûts unitaires (à ajuster en fonction du marché)
+    const coutCimentUnitaire = 10;  // Coût d'un sac de ciment de 50kg
+    const coutSableUnitaire = 30;   // Coût du mètre cube de sable
+    const coutGravierUnitaire = 40; // Coût du mètre cube de gravier
+
     useEffect(() => {
-        // Calculs pour Fondation en Moellon
         if (volumeFondation !== '') {
             const volumeFondationNum = parseFloat(volumeFondation);
-            const volumeMoellon = volumeFondationNum * 1.3; // Volume de Moellon
-            const quantiteCimentFondation = (volumeFondationNum * 150) / 50; // Quantité de Ciment
-            const quantiteSableFondation = volumeFondationNum * 0.4 * 1.5; // Quantité de Sable
+            const volumeMoellon = volumeFondationNum * 1.3;
+            const quantiteCimentFondation = (volumeFondationNum * 150) / 50;  // 150kg de ciment par m³
+            const quantiteSableFondation = volumeFondationNum * 0.4 * 1.5;     // Sable
+            const coutTotalCimentFondation = quantiteCimentFondation * coutCimentUnitaire;
+            const coutTotalSableFondation = quantiteSableFondation * coutSableUnitaire;
 
             updateQuoteData(prevData => ({
                 ...prevData,
@@ -21,15 +25,19 @@ const Devis2 = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
                 volumeMoellon,
                 quantiteCimentFondation,
                 quantiteSableFondation,
+                coutTotalCimentFondation,
+                coutTotalSableFondation,
             }));
         }
 
-        // Calculs pour Chape d'Égalisation
         if (volumeChappe !== '') {
             const volumeChappeNum = parseFloat(volumeChappe);
-            const quantiteCimentChappe = (volumeChappeNum * 350) / 50; // Quantité de Ciment
-            const quantiteSableChappe = volumeChappeNum * 0.4 * 1.5;   // Quantité de Sable
-            const quantiteGravierChappe = volumeChappeNum * 0.8 * 1.6; // Quantité de Gravier
+            const quantiteCimentChappe = (volumeChappeNum * 350) / 50;  // 350kg de ciment par m³
+            const quantiteSableChappe = volumeChappeNum * 0.4 * 1.5;
+            const quantiteGravierChappe = volumeChappeNum * 0.8 * 1.6;
+            const coutTotalCimentChappe = quantiteCimentChappe * coutCimentUnitaire;
+            const coutTotalSableChappe = quantiteSableChappe * coutSableUnitaire;
+            const coutTotalGravierChappe = quantiteGravierChappe * coutGravierUnitaire;
 
             updateQuoteData(prevData => ({
                 ...prevData,
@@ -37,10 +45,13 @@ const Devis2 = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
                 quantiteCimentChappe,
                 quantiteSableChappe,
                 quantiteGravierChappe,
+                coutTotalCimentChappe,
+                coutTotalSableChappe,
+                coutTotalGravierChappe,
             }));
         }
-    })
-    
+    }, [volumeFondation, volumeChappe]);
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         switch (name) {
@@ -72,9 +83,6 @@ const Devis2 = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
                         min="0"
                     />
                 </label>
-                <p>Volume de moellon : {quoteData.volumeMoellon?.toFixed(2)} m³</p>
-                <p>Quantité de ciment : {quoteData.quantiteCimentFondation?.toFixed(2)} sacs</p>
-                <p>Quantité de sable : {quoteData.quantiteSableFondation?.toFixed(2)} tonnes</p>
             </div>
 
             <div className="section">
@@ -90,9 +98,7 @@ const Devis2 = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
                         min="0"
                     />
                 </label>
-                <p>Quantité de ciment : {quoteData.quantiteCimentChappe?.toFixed(2)} sacs</p>
-                <p>Quantité de sable : {quoteData.quantiteSableChappe?.toFixed(2)} tonnes</p>
-                <p>Quantité de gravier : {quoteData.quantiteGravierChappe?.toFixed(2)} tonnes</p>
+               
             </div>
 
             <br />
@@ -102,4 +108,4 @@ const Devis2 = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
     );
 };
 
-export default Devis2;
+export default Fondation;

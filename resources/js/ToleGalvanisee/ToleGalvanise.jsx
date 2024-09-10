@@ -1,27 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import './Devis8.css';
+import './ToleGalvanise.css';
 
-const Devis8 = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
+const ToleGalvanise = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
     const [surfaceCouvrir, setSurfaceCouvrir] = useState(quoteData.surfaceCouvrir || '');
     const [surfaceUtileTole, setSurfaceUtileTole] = useState(quoteData.surfaceUtileTole || '');
     const [nombreTole, setNombreTole] = useState(0);
 
-    // UseEffect to update nombreTole whenever surfaceCouvrir or surfaceUtileTole changes
     useEffect(() => {
         calculerNombreTole();
     }, [surfaceCouvrir, surfaceUtileTole]);
 
-    // Calculate the number of sheets required
     const calculerNombreTole = () => {
         const sc = parseFloat(surfaceCouvrir) || 0;
         const sut = parseFloat(surfaceUtileTole) || 0;
         if (sut > 0) {
-            const nt = (sc / sut) * 1.15; // Add 15% extra
-            setNombreTole(Math.ceil(nt)); // or use `toFixed(0)` if you need a fixed decimal
+            const nt = (sc / sut) * 1.15; // Ajouter 15% de marge
+            setNombreTole(Math.ceil(nt));
         }
     };
 
-    // Handle form submission
     const handleSubmit = () => {
         if (surfaceCouvrir > 0 && surfaceUtileTole > 0) {
             updateQuoteData({
@@ -39,9 +36,7 @@ const Devis8 = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
         <div className="devis8">
             <h2>Étape 8: Couverture en Tôle Galvanisée</h2>
             <div className="form-group">
-                <label htmlFor="surfaceCouvrir">
-                    Surface à couvrir (Sc en m²) :
-                </label>
+                <label htmlFor="surfaceCouvrir">Surface à couvrir (Sc en m²) :</label>
                 <input
                     type="number"
                     id="surfaceCouvrir"
@@ -52,9 +47,7 @@ const Devis8 = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
                 />
             </div>
             <div className="form-group">
-                <label htmlFor="surfaceUtileTole">
-                    Surface utile de la tôle (Sut en m²) :
-                </label>
+                <label htmlFor="surfaceUtileTole">Surface utile de la tôle (Sut en m²) :</label>
                 <input
                     type="number"
                     id="surfaceUtileTole"
@@ -65,15 +58,12 @@ const Devis8 = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
                 />
             </div>
             <div className="form-group">
-                <label htmlFor="nombreTole">
-                    Nombre de tôles à acheter (Nt) :
-                </label>
+                <label htmlFor="nombreTole">Nombre de tôles à acheter (Nt) :</label>
                 <input
                     type="number"
                     id="nombreTole"
-                    value={nombreTole.toFixed(0)} // Display as integer
+                    value={nombreTole.toFixed(0)}
                     readOnly
-                    step="0.01" min="0"
                 />
             </div>
             <div className="button-group">
@@ -84,4 +74,4 @@ const Devis8 = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
     );
 };
 
-export default Devis8;
+export default ToleGalvanise;

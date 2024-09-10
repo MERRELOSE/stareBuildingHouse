@@ -1,32 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import './Devis7.css';
+import './MateriauxToiture.css';
 
-const Devis7 = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
-    const [ecartementFermes, setEcartementFermes] = useState(3); // Valeur par défaut de 2m pour l'écartement
-    const [longueurDevelopper, setLongueurDevelopper] = useState('');
+const MateriauxToiture = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
+    const [ecartementFermes, setEcartementFermes] = useState(3);
+    const [longueurDevelopper, setLongueurDevelopper] = useState(quoteData.longueurDevelopper || 0);
     const [nombreFermes, setNombreFermes] = useState(0);
     const [dimensionFerme, setDimensionFerme] = useState('');
     const [nombreMadrier, setNombreMadrier] = useState(0);
     const [nombreChevrons, setNombreChevrons] = useState(0);
 
-    // Utiliser useEffect pour calculer le nombre de fermes chaque fois que l'écartement ou le périmètre change
+    // Ajout des prix pour les matériaux
+    const prixMadrier = 15; // Exemple de prix par unité
+    const prixChevrons = 10; // Exemple de prix par unité
+
     useEffect(() => {
         calculerNombreFermes();
-    }, [ecartementFermes, quoteData.longueurDevelopper]);
+    }, [ecartementFermes, longueurDevelopper]);
 
-    // Calcul du nombre de fermes
-    const calculerNombreFermes = () =>{ 
+    const calculerNombreFermes = () => { 
         const lb = parseFloat(longueurDevelopper) || 0;
         const nf = Math.ceil(lb / ecartementFermes);
         setNombreFermes(nf);
     };
 
-    // Utiliser useEffect pour calculer le nombre de madriers chaque fois que la dimension ou le nombre de fermes change
     useEffect(() => {
         calculerNombreMadrier();
     }, [dimensionFerme, nombreFermes]);
 
-    // Calcul du nombre de madriers
     const calculerNombreMadrier = () => {
         const df = parseFloat(dimensionFerme) || 0;
         const nf = parseInt(nombreFermes) || 0;
@@ -34,7 +34,13 @@ const Devis7 = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
         setNombreMadrier(Math.ceil(madriers));
     };
 
-    // Gestion des changements de dimension
+    // Calcul du coût total
+    const calculerCoutTotal = () => {
+        const coutMadrier = nombreMadrier * prixMadrier;
+        const coutChevrons = nombreChevrons * prixChevrons;
+        return coutMadrier + coutChevrons;
+    };
+
     const handleDimensionChange = (e) => {
         setDimensionFerme(e.target.value);
     };
@@ -43,25 +49,16 @@ const Devis7 = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
         setLongueurDevelopper(e.target.value);
     };
 
-    /*const handleDimensionChange = (e) => {
-        const { name, value } = e.target;
-        if (name === 'dimensionFerme') {
-            setDimensionFerme(Number(value));
-        } else if (name === 'longueurDevelopper') {
-            setLongueurDevelopper(Number(value));
-        }}*/
-
-
-    // Envoi des données au parent
     const handleSubmit = () => {
-        // Vérification des champs requis
         if (longueurDevelopper && dimensionFerme && nombreFermes && nombreChevrons) {
             updateQuoteData({
                 ...quoteData,
+                longueurDevelopper,
                 nombreFermes,
                 dimensionFerme,
                 nombreMadrier,
                 nombreChevrons,
+                coutTotal: calculerCoutTotal() // Ajout du coût total aux données du devis
             });
             nextStep();
         } else {
@@ -74,52 +71,42 @@ const Devis7 = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
             <h2>Étape 5: Toiture - Madrier et Chevrons</h2>
 
             <div className="form-group">
-                <label htmlFor="longueurDevelopper">
-                    Longueur developper (Ld en m) :
-                </label>
+                <label htmlFor="longueurDevelopper">Longueur développée (Ld en m) :</label>
                 <input
                     type="number"
                     id="longueurDevelopper"
                     value={longueurDevelopper}
                     onChange={handleLongueurChange}
-                    placeholder="Entrez la longueur developper du batiment"
+                    placeholder="Entrez la longueur développée du bâtiment"
                     step="0.5"
                     min="0"
                 />
             </div>
+
             <div className="form-group">
-                <label htmlFor="ecartementFermes">
-                    Ecartement entre fermes (m) :
-                </label>
+                <label htmlFor="ecartementFermes">Écartement entre fermes (m) :</label>
                 <select
                     id="ecartementFermes"
                     value={ecartementFermes}
                     onChange={(e) => setEcartementFermes(parseFloat(e.target.value))}
                 >
-                    <option >switch</option>
                     <option value={1.5}>1.5 m</option>
                     <option value={2}>2 m</option>
                 </select>
             </div>
 
             <div className="form-group">
-                <label htmlFor="nombreFermes">
-                    Nombre de fermes (Nf) :
-                </label>
+                <label htmlFor="nombreFermes">Nombre de fermes (Nf) :</label>
                 <input
                     type="number"
                     id="nombreFermes"
                     value={nombreFermes}
-                    onChange={(e) => setNombreFermes(parseInt(e.target.value))}
-                    step="1" 
-                    min="0"
-                    readOnly // Le nombre de fermes est calculé automatiquement
+                    readOnly 
                 />
             </div>
+
             <div className="form-group">
-                <label htmlFor="dimensionFerme">
-                    Dimension d'une ferme (Df en m) :
-                </label>
+                <label htmlFor="dimensionFerme">Dimension d'une ferme (Df en m) :</label>
                 <input
                     type="number"
                     id="dimensionFerme"
@@ -132,23 +119,17 @@ const Devis7 = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
             </div>
 
             <div className="form-group">
-                <label htmlFor="nombreMadrier">
-                    Nombre de madriers :
-                </label>
+                <label htmlFor="nombreMadrier">Nombre de madriers :</label>
                 <input
                     type="number"
                     id="nombreMadrier"
                     value={nombreMadrier}
-                    onChange={(e) => setNombreMadrier(parseInt(e.target.value))}
-                    step="1" 
-                    min="0"
-                    readOnly // Le nombre de madriers est calculé automatiquement
+                    readOnly 
                 />
             </div>
+
             <div className="form-group">
-                <label htmlFor="nombreChevrons">
-                    Nombre de chevrons (Nc) :
-                </label>
+                <label htmlFor="nombreChevrons">Nombre de chevrons (Nc) :</label>
                 <input
                     type="number"
                     id="nombreChevrons"
@@ -158,6 +139,14 @@ const Devis7 = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
                     min="0"
                 />
             </div>
+
+            <div className="cost-summary">
+                <h3>Résumé des Coûts</h3>
+                <p>Coût des Madriers : {nombreMadrier * prixMadrier} €</p>
+                <p>Coût des Chevrons : {nombreChevrons * prixChevrons} €</p>
+                <p><strong>Coût Total : {calculerCoutTotal()} €</strong></p>
+            </div>
+
             <div className="button-group">
                 <button onClick={prevStep}>Précédent</button>
                 <button onClick={handleSubmit}>Suivant</button>
@@ -166,4 +155,4 @@ const Devis7 = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
     );
 };
 
-export default Devis7;
+export default MateriauxToiture;
