@@ -2,13 +2,15 @@ import React, { useState, useEffect } from 'react';
 import './Fondation.css';
 
 const Fondation = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
-    const [volumeFondation, setVolumeDalleBeton] = useState(quoteData.volumeFondation || '');
+    const [volumeFondation, setVolumeFondation] = useState(quoteData.volumeFondation || '');
     const [volumeChappe, setVolumeChappe] = useState(quoteData.volumeChappe || '');
 
     // Coûts unitaires (à ajuster en fonction du marché)
     const coutCimentUnitaire = 10;  // Coût d'un sac de ciment de 50kg
     const coutSableUnitaire = 30;   // Coût du mètre cube de sable
     const coutGravierUnitaire = 40; // Coût du mètre cube de gravier
+    const coutCaillasseUnitaire = 25; // Coût du mètre cube de caillasse
+    const coutEauUnitaire = 5; // Coût du mètre cube d'eau
 
     useEffect(() => {
         if (volumeFondation !== '') {
@@ -16,17 +18,26 @@ const Fondation = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
             const volumeMoellon = volumeFondationNum * 1.3;
             const quantiteCimentFondation = (volumeFondationNum * 150) / 50;  // 150kg de ciment par m³
             const quantiteSableFondation = volumeFondationNum * 0.4 * 1.5;     // Sable
+            const quantiteCaillasseFondation = volumeFondationNum * 0.5; // Ex : 0.5m³ de caillasse pour 1m³ de béton
+            const quantiteEauFondation = volumeFondationNum * 0.6; // Ex : 0.6m³ d'eau pour 1m³ de béton
+
             const coutTotalCimentFondation = quantiteCimentFondation * coutCimentUnitaire;
             const coutTotalSableFondation = quantiteSableFondation * coutSableUnitaire;
+            const coutTotalCaillasseFondation = quantiteCaillasseFondation * coutCaillasseUnitaire;
+            const coutTotalEauFondation = quantiteEauFondation * coutEauUnitaire;
 
             updateQuoteData(prevData => ({
                 ...prevData,
                 volumeFondation: volumeFondationNum,
                 volumeMoellon,
-                quantiteCimentFondation,
-                quantiteSableFondation,
-                coutTotalCimentFondation,
-                coutTotalSableFondation,
+                quantiteCimentFondation: (prevData.quantiteCimentFondation || 0) + quantiteCimentFondation,
+                quantiteSableFondation: (prevData.quantiteSableFondation || 0) + quantiteSableFondation,
+                quantiteCaillasseFondation: (prevData.quantiteCaillasseFondation || 0) + quantiteCaillasseFondation,
+                quantiteEauFondation: (prevData.quantiteEauFondation || 0) + quantiteEauFondation,
+                coutTotalCimentFondation: (prevData.coutTotalCimentFondation || 0) + coutTotalCimentFondation,
+                coutTotalSableFondation: (prevData.coutTotalSableFondation || 0) + coutTotalSableFondation,
+                coutTotalCaillasseFondation: (prevData.coutTotalCaillasseFondation || 0) + coutTotalCaillasseFondation,
+                coutTotalEauFondation: (prevData.coutTotalEauFondation || 0) + coutTotalEauFondation,
             }));
         }
 
@@ -42,12 +53,12 @@ const Fondation = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
             updateQuoteData(prevData => ({
                 ...prevData,
                 volumeChappe: volumeChappeNum,
-                quantiteCimentChappe,
-                quantiteSableChappe,
-                quantiteGravierChappe,
-                coutTotalCimentChappe,
-                coutTotalSableChappe,
-                coutTotalGravierChappe,
+                quantiteCimentChappe: (prevData.quantiteCimentChappe || 0) + quantiteCimentChappe,
+                quantiteSableChappe: (prevData.quantiteSableChappe || 0) + quantiteSableChappe,
+                quantiteGravierChappe: (prevData.quantiteGravierChappe || 0) + quantiteGravierChappe,
+                coutTotalCimentChappe: (prevData.coutTotalCimentChappe || 0) + coutTotalCimentChappe,
+                coutTotalSableChappe: (prevData.coutTotalSableChappe || 0) + coutTotalSableChappe,
+                coutTotalGravierChappe: (prevData.coutTotalGravierChappe || 0) + coutTotalGravierChappe,
             }));
         }
     }, [volumeFondation, volumeChappe]);
@@ -56,7 +67,7 @@ const Fondation = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
         const { name, value } = e.target;
         switch (name) {
             case 'volumeFondation':
-                setVolumeDalleBeton(value);
+                setVolumeFondation(value);
                 break;
             case 'volumeChappe':
                 setVolumeChappe(value);
@@ -98,7 +109,6 @@ const Fondation = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
                         min="0"
                     />
                 </label>
-               
             </div>
 
             <br />

@@ -19,4 +19,5 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/upload-profile-photo', [AuthController::class, 'uploadProfilePhoto']);
     Route::get('/user', [AuthController::class, 'getUser']);
     Route::put('/user', [AuthController::class, 'updateUser']);
+    
 });

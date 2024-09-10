@@ -23,6 +23,9 @@ const Elevation = ({ nextStep, prevStep, updateQuoteData }) => {
     '25cm': 35   // prix par m²
   };
 
+  // Coût unitaire des étriers (exemple en euros)
+  const costPerEtrier = 5; // Coût unitaire des étriers
+
   // Fonction pour calculer les armatures
   const calculateArmature = () => {
     if (!ncl || !hcl || !nv) return null;
@@ -38,7 +41,10 @@ const Elevation = ({ nextStep, prevStep, updateQuoteData }) => {
     const net = (hclNum / espacement) * nclNum;
     const etrierTotal = (0.54 * net + 24) / 12; // barres de 6
 
-    return { blUnitaire, blTotal, net, etrierTotal };
+    // Calcul du coût total des étriers
+    const costEtriers = etrierTotal * costPerEtrier;
+
+    return { blUnitaire, blTotal, net, etrierTotal, costEtriers };
   };
 
   // Fonction pour calculer le béton
@@ -100,13 +106,14 @@ const Elevation = ({ nextStep, prevStep, updateQuoteData }) => {
         ncl,
         hcl,
         nv,
-        cost: calculateCost() // Ajout du coût total aux données du devis
+        cost: calculateCost(), // Ajout du coût total aux données du devis
+        armature: calculateArmature(), // Ajout des résultats d'armature aux données du devis
+        beton: calculateBeton() // Ajout des résultats de béton aux données du devis
     });
 
     // Passage à l'étape suivante
     nextStep();
 };
-
 
   const armature = calculateArmature();
   const beton = calculateBeton();
@@ -206,55 +213,51 @@ const Elevation = ({ nextStep, prevStep, updateQuoteData }) => {
           </div>
           <div className="result-item">
             <span>Barres longitudinales totales : </span>
-            <span>{armature.blTotal.toFixed(2)} barres de 10</span>
+            <span>{armature.blTotal.toFixed(2)} m</span>
           </div>
           <div className="result-item">
-            <span>Nombre d'étriers : </span>
-            <span>{armature.net.toFixed(0)} unités</span>
+            <span>Étriers totaux : </span>
+            <span>{armature.etrierTotal.toFixed(2)}</span>
           </div>
           <div className="result-item">
-            <span>Longueur totale d'étriers : </span>
-            <span>{armature.etrierTotal.toFixed(2)} barres de 6</span>
+            <span>Coût des étriers : </span>
+            <span>{armature.costEtriers.toFixed(2)} €</span>
           </div>
+          {beton && (
+            <>
+              <div className="result-item">
+                <span>Volume de béton nécessaire : </span>
+                <span>{beton.volume.toFixed(2)} m³</span>
+              </div>
+              <div className="result-item">
+                <span>Quantité de ciment : </span>
+                <span>{beton.qCiment.toFixed(2)} sacs</span>
+              </div>
+              <div className="result-item">
+                <span>Quantité de sable : </span>
+                <span>{beton.qSable.toFixed(2)} tonnes</span>
+              </div>
+              <div className="result-item">
+                <span>Quantité de caillasse : </span>
+                <span>{beton.qCaillasse.toFixed(2)} tonnes</span>
+              </div>
+              <div className="result-item">
+                <span>Quantité d'eau de gâchage : </span>
+                <span>{beton.eauGachage.toFixed(2)} litres</span>
+              </div>
+            </>
+          )}
+          {cost && (
+            <div className="result-item">
+              <span>Coût total des murs : </span>
+              <span>{cost.toFixed(2)} €</span>
+            </div>
+          )}
         </div>
       )}
 
-      {beton && (
-        <div className="calculated-results">
-          <div className="result-item">
-            <span>Volume de béton : </span>
-            <span>{beton.volume.toFixed(2)} m³</span>
-          </div>
-          <div className="result-item">
-            <span>Quantité de ciment : </span>
-            <span>{beton.qCiment.toFixed(2)} sacs</span>
-          </div>
-          <div className="result-item">
-            <span>Quantité de sable : </span>
-            <span>{beton.qSable.toFixed(2)} tonnes</span>
-          </div>
-          <div className="result-item">
-            <span>Quantité de caillasse : </span>
-            <span>{beton.qCaillasse.toFixed(2)} tonnes</span>
-          </div>
-          <div className="result-item">
-            <span>Eau de gâchage : </span>
-            <span>{beton.eauGachage.toFixed(2)} litres</span>
-          </div>
-        </div>
-      )}
-
-      {cost && (
-        <div className="cost-summary">
-          <h3>Coût Total Estimé</h3>
-          <div className="result-item">
-            <span>Coût total des matériaux : </span>
-            <span>{cost.toFixed(2)} €</span>
-          </div>
-        </div>
-      )}
-
-      <div className="buttons">
+      {/* Boutons de navigation */}
+      <div className="navigation-buttons">
         <button onClick={prevStep}>Précédent</button>
         <button onClick={handleSubmit}>Suivant</button>
       </div>

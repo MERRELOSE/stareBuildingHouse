@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import "./Beton.css"
+import "./Beton.css";
 
 const Beton = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
     const [longueurPoutre, setLongueurPoutre] = useState(quoteData.longueurPoutre || 0);
@@ -7,9 +7,10 @@ const Beton = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
     const [volumeBeton, setVolumeBeton] = useState(quoteData.volumeBeton || 0);
 
     // Coûts unitaires des matériaux
-    const costPerCiment = 50; // Exemple coût unitaire du ciment par sac (en euros)
-    const costPerSable = 30;  // Exemple coût unitaire du sable par m³
-    const costPerCaillasse = 40;  // Exemple coût unitaire de la caillasse par m³
+    const costPerCiment = 50;       // Coût unitaire du ciment par sac (en euros)
+    const costPerSable = 30;        // Coût unitaire du sable par m³
+    const costPerCaillasse = 40;    // Coût unitaire de la caillasse par m³
+    const costPerEau = 5;           // Coût du mètre cube d'eau (à ajouter si nécessaire)
 
     useEffect(() => {
         const perimetre = quoteData.perimetre || 0;
@@ -25,11 +26,13 @@ const Beton = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
         const quantiteCiment = (volume * 350) / 50;
         const quantiteSable = volume * 0.4 * 1.5;
         const quantiteCaillasse = quantiteSable * 2;
+        const quantiteEau = volume * 0.5; // Exemple : 0.5m³ d'eau par m³ de béton
 
         // Calcul des coûts
         const coutCiment = quantiteCiment * costPerCiment;
         const coutSable = quantiteSable * costPerSable;
         const coutCaillasse = quantiteCaillasse * costPerCaillasse;
+        const coutEau = quantiteEau * costPerEau;
 
         // Mise à jour des données du devis avec les quantités et les coûts
         updateQuoteData(prevData => ({
@@ -42,9 +45,11 @@ const Beton = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
             quantiteCiment,
             quantiteSable,
             quantiteCaillasse,
+            quantiteEau,
             coutCiment,
             coutSable,
             coutCaillasse,
+            coutEau,
         }));
     }, [longueurPoutre, longueurEtrier, volumeBeton, quoteData.perimetre, updateQuoteData]);
 

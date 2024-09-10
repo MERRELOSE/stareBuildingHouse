@@ -14,21 +14,22 @@ const App = () => {
     const [user, setUser] = useState(null);
 
     return (
-        <AuthProvider>
             <Router>
-                <Header user={user} />
-                <div>
-                    <Routes>
-                        <Route path="/" element={<Home user={user} />} />
-                        <Route path="/login" element={<Login setUser={setUser} />} />
-                        <Route path="/signup" element={<Signup />} />
-                        <Route path="/profile" element={<ProfilePage />} />
-                        <Route path="/devis/*" element={<Devis />} /> {/* Gestion des étapes du devis */}
-                    </Routes>
-                </div>
-                <Footer />
+                <AuthProvider>
+                    <Header user={user} />
+                    <div>
+                        <Routes>
+                            <Route path="/" element={<Home user={user} />} />
+                            <Route path="/login" element={<Login setUser={setUser} />} />
+                            <Route path="/signup" element={<Signup />} />
+                            <Route path="/profile" element={<ProfilePage />} />
+                            <Route path="/devis/*" element={<Devis />} /> {/* Gestion des étapes du devis */}
+                        </Routes>
+                    </div>
+                    <Footer />
+                </AuthProvider>
+                
             </Router>
-        </AuthProvider>
     );
 };
 

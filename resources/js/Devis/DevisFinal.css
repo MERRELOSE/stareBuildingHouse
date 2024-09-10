@@ -50,6 +50,7 @@
   color: #28a745;
 }
 
+/* Alignement des boutons */
 .action-buttons {
   display: flex;
   justify-content: space-between;
@@ -85,7 +86,24 @@
   background-color: #218838;
 }
 
+.action-buttons button.download-button {
+  background-color: #007bff;
+  color: white;
+  margin-right: 10px;
+}
 
+.action-buttons button.download-button:hover {
+  background-color: #0056b3;
+}
+
+.action-buttons button.print-button {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.action-buttons button.print-button:hover {
+  background-color: #138496;
+}
 
 /* Style pour petits écrans */
 @media (max-width: 600px) {

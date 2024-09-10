@@ -9,6 +9,8 @@ import ToitureSelector from '../Toiture/ToitureSelector';
 import MateriauxToiture from '../ToitureTwo/MateriauxToiture.jsx';
 import ToleGalvanise from '../ToleGalvanisee/ToleGalvanise.JSX';
 import TileSelection from '../TileCarreau/TileSelection';
+import DevisFinal from '../Devis/DevisFinal.jsx'; // Chemin relatif vers le fichier DevisFinal.jsx
+
 
 const Devis = () => {
     const [step, setStep] = useState(1);
@@ -51,6 +53,19 @@ const Devis = () => {
         stoneCost: 0,
         waterCost: 0,
     });
+
+    const calculateTotalCost = () => {
+        // Calcul détaillé du coût total
+        const costMaterial = (
+            (quoteData.sandCost * quoteData.sandQuantity) +
+            (quoteData.cementCost * quoteData.cementQuantity) +
+            (quoteData.gravelCost * quoteData.gravelQuantity) +
+            (quoteData.stoneCost * quoteData.stoneQuantity) +
+            (quoteData.waterCost * quoteData.waterQuantity) 
+        );
+        const costLabour = quoteData.laborCost; // Coût de la main-d'œuvre
+        return costMaterial + costLabour;
+    };
 
     const nextStep = () => {
         setStep(prevStep => prevStep + 1);

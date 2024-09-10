@@ -142,32 +142,36 @@ class AuthController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function uploadProfilePhoto(Request $request)
+        public function uploadProfilePhoto(Request $request)
     {
         $request->validate([
-            'profile_photo' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Validation du fichier image
+            'profile_photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Validation du fichier image
         ]);
-    
+
+        // Vérifier si l'utilisateur est authentifié
+        if (!auth()->check()) {
+            return response()->json(['success' => false, 'message' => 'Utilisateur non authentifié.'], 401);
+        }
+
         // Récupérer l'utilisateur authentifié
         $user = auth()->user();
-    
+
         // Supprimer l'ancienne photo si elle existe
         if ($user->profile_photo_path) {
             Storage::disk('public')->delete($user->profile_photo_path);
         }
-    
+
         // Stocker la nouvelle photo
         $path = $request->file('profile_photo')->store('profile-photos', 'public');
-    
+
         // Mettre à jour le chemin de la photo dans la base de données
         $user->profile_photo_path = $path;
         $user->save();
-    
+
         return response()->json([
             'success' => true,
             'message' => 'Photo de profil mise à jour avec succès.',
             'photo_path' => asset('storage/' . $path), // Renvoyer le chemin complet de la photo
         ]);
-    }    
-    
+    }
 }

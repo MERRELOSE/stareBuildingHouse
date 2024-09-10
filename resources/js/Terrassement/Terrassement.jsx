@@ -9,6 +9,8 @@ const Terrassement = ({ nextStep, quoteData, updateQuoteData }) => {
     const coutCimentUnitaire = 10; // Coût d'un sac de ciment de 50kg
     const coutSableUnitaire = 30;  // Coût du mètre cube de sable
     const coutGravierUnitaire = 40; // Coût du mètre cube de gravier
+    const coutCaillasseUnitaire = 25; // Coût du mètre cube de caillasse
+    const coutEauUnitaire = 5; // Coût du mètre cube d'eau
 
     useEffect(() => {
         if (aireDalle > 0 && epaisseurFondation > 0) {
@@ -16,22 +18,32 @@ const Terrassement = ({ nextStep, quoteData, updateQuoteData }) => {
             const quantiteCiment = (volumeBeton * 200) / 50;  // 200 kg de ciment pour 1m³
             const quantiteSable = volumeBeton * 0.4 * 1.5;   // 0.4m³ de sable pour 1m³ de béton
             const quantiteGravier = volumeBeton * 0.8 * 1.6; // 0.8m³ de gravier pour 1m³ de béton
+            const quantiteCaillasse = volumeBeton * 0.5; // Ex : 0.5m³ de caillasse pour 1m³ de béton
+            const quantiteEau = volumeBeton * 0.6; // Ex : 0.6m³ d'eau pour 1m³ de béton
 
             // Calculs des coûts totaux
             const coutTotalCiment = quantiteCiment * coutCimentUnitaire;
             const coutTotalSable = quantiteSable * coutSableUnitaire;
             const coutTotalGravier = quantiteGravier * coutGravierUnitaire;
+            const coutTotalCaillasse = quantiteCaillasse * coutCaillasseUnitaire;
+            const coutTotalEau = quantiteEau * coutEauUnitaire;
 
+            // Met à jour les données avec cumul des quantités
             updateQuoteData({
+                ...quoteData, // Garde les autres données existantes
                 aireDalle,
                 epaisseurFondation,
                 volumeBeton,
-                quantiteCiment,
-                quantiteSable,
-                quantiteGravier,
-                coutTotalCiment,
-                coutTotalSable,
-                coutTotalGravier,
+                quantiteCiment: (quoteData.quantiteCiment || 0) + quantiteCiment, // Ajoute la quantité calculée
+                quantiteSable: (quoteData.quantiteSable || 0) + quantiteSable,   // Ajoute la quantité calculée
+                quantiteGravier: (quoteData.quantiteGravier || 0) + quantiteGravier, // Ajoute la quantité calculée
+                quantiteCaillasse: (quoteData.quantiteCaillasse || 0) + quantiteCaillasse, // Ajoute la quantité calculée
+                quantiteEau: (quoteData.quantiteEau || 0) + quantiteEau, // Ajoute la quantité calculée
+                coutTotalCiment: (quoteData.coutTotalCiment || 0) + coutTotalCiment, 
+                coutTotalSable: (quoteData.coutTotalSable || 0) + coutTotalSable,
+                coutTotalGravier: (quoteData.coutTotalGravier || 0) + coutTotalGravier,
+                coutTotalCaillasse: (quoteData.coutTotalCaillasse || 0) + coutTotalCaillasse,
+                coutTotalEau: (quoteData.coutTotalEau || 0) + coutTotalEau,
             });
         }
     }, [aireDalle, epaisseurFondation]);
