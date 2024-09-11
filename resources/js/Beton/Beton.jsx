@@ -103,8 +103,15 @@ const Beton = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
                 />
             </label>
             <br />
-            <button onClick={prevStep}>Précédent</button>
-            <button onClick={nextStep}>Suivant</button>
+            <div className="actionbutton">
+                <button onClick={prevStep}>Précédent</button>
+                <button 
+                    onClick={nextStep} 
+                    disabled={longueurPoutre <= 0 || longueurEtrier <= 0 || volumeBeton <= 0} // Désactive le bouton si l'un des champs est à zéro
+                >
+                    Suivant
+                </button>
+            </div>
         </div>
     );
 };

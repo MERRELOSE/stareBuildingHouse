@@ -57,3 +57,7 @@
     cursor: not-allowed;
   }
   
+  .actionbutton {
+    display: flex;
+    flex-direction: row;
+  }

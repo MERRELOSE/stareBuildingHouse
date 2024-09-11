@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import "./Blocs.css";
 
 const Blocs = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
-    // Initialisation de l'état pour la surface utile
     const [surfaceUtile, setSurfaceUtile] = useState(quoteData.surfaceUtile || 0);
 
     // Coûts unitaires (à ajuster en fonction du marché)
@@ -12,7 +11,6 @@ const Blocs = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
     const coutCaillasseUnitaire = 25; // Coût du mètre cube de caillasse
     const coutEauUnitaire = 5; // Coût du mètre cube d'eau
 
-    // Utilisation de useEffect pour calculer les matériaux lorsque la surface utile change
     useEffect(() => {
         if (surfaceUtile > 0) {
             const nombreBlocs = (surfaceUtile * 13) + ((65 * surfaceUtile) / 100); // Calcul des blocs nécessaires
@@ -28,7 +26,6 @@ const Blocs = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
             const coutTotalCaillasse = quantiteCaillasse * coutCaillasseUnitaire;
             const coutTotalEau = quantiteEau * coutEauUnitaire;
 
-            // Mise à jour des données du devis
             updateQuoteData(prevData => ({
                 ...prevData,
                 surfaceUtile,
@@ -46,7 +43,6 @@ const Blocs = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
         }
     }, [surfaceUtile, updateQuoteData]);
 
-    // Gestion des changements dans les champs de saisie
     const handleChange = (e) => {
         const { name, value } = e.target;
         if (name === 'surfaceUtile') {
@@ -59,18 +55,15 @@ const Blocs = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
             <h2>Étape 3: Nombre de Blocs</h2>
             <label>
                 Surface Utile (m²):
-                <input
-                    type="number"
-                    name="surfaceUtile"
-                    value={surfaceUtile}
-                    onChange={handleChange}
-                    step="0.01"
+                <input type="number" name="surfaceUtile" value={surfaceUtile} onChange={handleChange}step="0.01"
                     min="0"
                 />
             </label>
             <br />
-            <button onClick={prevStep}>Précédent</button>
-            <button onClick={nextStep}>Suivant</button>
+            <div className="actionbutton">
+                <button onClick={prevStep}>Précédent</button>
+                <button onClick={nextStep} disabled={surfaceUtile <= 0}  >Suivant</button>
+            </div>
         </div>
     );
 };

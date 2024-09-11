@@ -4,6 +4,7 @@ import './Fondation.css';
 const Fondation = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
     const [volumeFondation, setVolumeFondation] = useState(quoteData.volumeFondation || '');
     const [volumeChappe, setVolumeChappe] = useState(quoteData.volumeChappe || '');
+    const [errorMessage, setErrorMessage] = useState('');
 
     // Coûts unitaires (à ajuster en fonction du marché)
     const coutCimentUnitaire = 10;  // Coût d'un sac de ciment de 50kg
@@ -77,6 +78,15 @@ const Fondation = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
         }
     };
 
+    const handleNextStep = () => {
+        if (!volumeFondation || !volumeChappe) {
+            setErrorMessage("Veuillez renseigner tous les champs avant de continuer.");
+        } else {
+            setErrorMessage('');
+            nextStep();
+        }
+    };
+
     return (
         <div className='devis2'>
             <h2>Étape 2: Fondation</h2><br />
@@ -111,9 +121,13 @@ const Fondation = ({ nextStep, prevStep, quoteData, updateQuoteData }) => {
                 </label>
             </div>
 
+            {errorMessage && <p className="error-message">{errorMessage}</p>}
+
             <br />
-            <button onClick={prevStep}>Précédent</button>
-            <button onClick={nextStep}>Suivant</button>
+            <div className='actionbutton'>
+                <button onClick={prevStep}>Précédent</button>
+                <button onClick={handleNextStep}>Suivant</button>
+            </div>
         </div>
     );
 };

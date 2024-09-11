@@ -67,3 +67,14 @@
     cursor: not-allowed;
   }
   
+  .error-message {
+    color: red;
+    font-size: 1rem;
+    margin-top: 10px;
+}
+
+
+.actionbutton {
+  display: flex;
+  flex-direction: row;
+}

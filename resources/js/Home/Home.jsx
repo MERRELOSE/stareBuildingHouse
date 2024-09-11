@@ -1,4 +1,4 @@
-import React from 'react';
+import { React, useState } from 'react';
 import { Link, useNavigate} from 'react-router-dom';
 import './Home.css';
 import maison from '../components/assets/Constructiondemaison1.jpg';
@@ -14,25 +14,60 @@ import detail from '../components/assets/construction.mp4';
 
     
     const Home = ({ user }) => {
+        const [showConfirmation, setShowConfirmation] = useState(false);
         const navigate = useNavigate();
 
         const handleGetStartedClick = (e) => {
             e.preventDefault();
-            if ( user ) {
-                navigate('/devis');
+            if (user) {
+                // Afficher la boîte de confirmation si l'utilisateur est connecté
+                setShowConfirmation(true);
             } else {
+                // Rediriger vers la page de connexion avec un message
                 navigate('/login', { state: { message: 'Merci de bien vouloir vous connecter avant de continuer:)' } });
             }
         };
+    
+        const handleConfirm = () => {
+            // Fermer la boîte de confirmation et naviguer vers la page du devis
+            setShowConfirmation(false);
+            navigate('/devis');
+        };
+    
+        const handleCancel = () => {
+            // Fermer la boîte de confirmation sans action
+            setShowConfirmation(false);
+        };
+    
     return (
             <div className='Home'>
                 <main>
                     <section className="hero-section">
-                        <div className="hero-content">
-                            <h2>{user && <p>Bonjour, {user.name}!</p>}Obtenez des devis précis pour votre projet de maison</h2>
-                            <p>Utilisez notre application pour créer des devis personnalisés et détaillés en quelques étapes simples.</p>
-                            <Link to="" onClick={handleGetStartedClick} className="cta-button">Commencer Maintenant</Link>
-                        </div><br/>
+                    <div className="hero-content">
+                        <h2>{user && <p>Bonjour, {user.name}!</p>}Obtenez des devis précis pour votre projet de maison</h2>
+                        <p>Utilisez notre application pour créer des devis personnalisés et détaillés en quelques étapes simples.</p>
+                        <Link to="" onClick={handleGetStartedClick} className="cta-button">Commencer Maintenant</Link>
+                    </div><br/>
+                    {/* Afficher la boîte modale si showConfirmation est true */}
+                    {showConfirmation && (
+                        <div className="modal">
+                            <div className="modal-content">
+                                <p>Avant de commencer votre devis, assurez-vous d'avoir les informations suivantes :</p>
+                                <ul>
+                                    <li>Dimensions exactes de votre maison (surface totale, nombre d'étages, etc.).</li>
+                                    <li>Type de matériaux que vous souhaitez utiliser (murs, toit, fondations).</li>
+                                    <li>Une estimation de votre budget pour mieux ajuster vos choix.</li>
+                                    <li>Les détails de votre terrain (localisation, type de terrain).</li>
+                                    <li>Le nombre de pièces et la configuration (chambres, salles de bain, etc.).</li>
+                                    <li>Le type de toit (tôle, tuiles, etc.).</li>
+                                    <li>Des options supplémentaires comme une terrasse, un garage, etc.</li>
+                                </ul>
+                                <p>Êtes-vous prêt à commencer ?</p>
+                                <button onClick={handleConfirm}>Oui, continuer</button>
+                                <button onClick={handleCancel}>Annuler</button>
+                            </div>
+                        </div>
+                    )}
                         <div className="hero">
                             <div className="hero-image">
                                 <img src={maison} alt="Construction de maison" />
